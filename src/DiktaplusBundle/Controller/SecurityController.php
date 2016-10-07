@@ -42,10 +42,12 @@ class SecurityController extends Controller
                 return $this->redirect($this->generateURL('welcome'));
             } else {
                 $this->session->getFlashBag()->add('info', 'Email already used');
+                return $this->redirect($this->generateURL('signup'));
+
             }
         }
-        return $this->render('DiktaplusBundle:Default:signup.html.twig',
-            array('signup_form' => $signup_form->createView()));
+        return $this->render('DiktaplusBundle:Default:form.html.twig',
+            array('form' => $signup_form->createView(),'form_title' => "Sign up"));
     }
 
 

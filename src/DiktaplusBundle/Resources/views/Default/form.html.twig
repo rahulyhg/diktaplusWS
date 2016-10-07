@@ -1,0 +1,12 @@
+{% extends 'layout.html.twig' %}
+{% block content %}
+    {% if app.user %}
+
+        <h3>{{ form_title }}</h3>
+    <hr/>
+    <form action="" method="post" {{ form_enctype(form) }}>
+        {{ form_widget(form) }}
+        {{ form_errors(form) }}
+    </form>
+    {% endif %}
+{% endblock %}

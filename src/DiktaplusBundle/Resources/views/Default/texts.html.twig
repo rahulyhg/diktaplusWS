@@ -6,6 +6,7 @@
             <th>Difficulty</th>
             <th>Language</th>
             <th>Content</th>
+            <th>Show</th>
             <th>Edit</th>
             <th>Delete</th>
         </tr>
@@ -15,8 +16,9 @@
             <td>{{ text.difficulty }}</td>
             <td>{{ text.language }}</td>
             <td>{{ text.content }}</td>
-            <td><a href="{{ path('texts/add') }}{{ text.id }}">Edit</a></td>
-            <td><a href="{{ path('texts/deletes') }}{{ text.id }}">Delete</a></td>
+            <td><a href="{{ path('texts_show' , { 'id': text.id }) }}">Show</a></td>
+            <td><a href="{{ path('texts_edit', { 'id': text.id }) }}">Edit</a></td>
+            <td><a href="{{ path('texts_delete', { 'id': text.id }) }}">Delete</a></td>
         </tr>
     {% endfor %}
     </table>
