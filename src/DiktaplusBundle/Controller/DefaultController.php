@@ -8,6 +8,6 @@ class DefaultController extends Controller
 {
     public function indexAction()
     {
-        return $this->render('DiktaplusBundle:Default:index.html.twig');
+        return $this->render('DiktaplusBundle:Default:login.html.twig');
     }
 }

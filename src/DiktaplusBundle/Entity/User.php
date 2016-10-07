@@ -3,6 +3,8 @@
 namespace DiktaplusBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\Common\Collections\ArrayCollection;
+
 
 /**
  * User
@@ -62,6 +64,13 @@ class User
      * @ORM\Column(name="level", type="integer")
      */
     private $level;
+
+    /**
+     * @ORM\ManyToOne(targetEntity="User", inversedBy="friends")
+     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     */
+    private $friends;
+
 
 
     /**

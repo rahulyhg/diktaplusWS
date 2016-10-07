@@ -38,7 +38,7 @@ class Text
     /**
      * @var string
      *
-     * @ORM\Column(name="content", type="text", unique=true)
+     * @ORM\Column(name="content", type="text")
      */
     private $content;
 
