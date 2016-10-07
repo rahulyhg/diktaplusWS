@@ -73,16 +73,18 @@
 
     <!-- Page Content -->
     <div id="page-content-wrapper">
-        <a type="button" class="btn btn-info" id="menu-toggle">Show/hide sidebar</a>
+        <a type="button" class="btn btn-info" id="menu-toggle" style="margin-right: 10px;">Show/hide sidebar</a>
         {% if app.user %}
             Logged in as: {{ app.user }}
         {% elseif not app.user %}
             Not logged in
         {% endif %}
+        <br/>
         {% for message in app.session.flashbag().get('info') %}
         <div class="alert alert-info">
             <p class="info">{{ message }}</p>
             {% endfor %}
+            <br/>
             {% block content %}{% endblock %}
         </div>
     </div>

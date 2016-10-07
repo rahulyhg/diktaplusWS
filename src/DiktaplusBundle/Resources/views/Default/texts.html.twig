@@ -1,6 +1,24 @@
 {% extends 'layout.html.twig' %}
 {% block content %}
-    
-
+    <table class="table table-bordered">
+        <tr>
+            <th>ID</th>
+            <th>Difficulty</th>
+            <th>Language</th>
+            <th>Content</th>
+            <th>Edit</th>
+            <th>Delete</th>
+        </tr>
+    {% for text in texts %}
+        <tr>
+            <td>{{ text.id }}</td>
+            <td>{{ text.difficulty }}</td>
+            <td>{{ text.language }}</td>
+            <td>{{ text.content }}</td>
+            <td><a href="{{ path('texts/add') }}{{ text.id }}">Edit</a></td>
+            <td><a href="{{ path('texts/deletes') }}{{ text.id }}">Delete</a></td>
+        </tr>
+    {% endfor %}
+    </table>
 
 {% endblock %}

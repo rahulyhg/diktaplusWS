@@ -8,11 +8,11 @@ texts:
 
 signup:
     pattern:  /signup
-    defaults: { _controller: DiktaplusBundle:Default:signup }
+    defaults: { _controller: DiktaplusBundle:Security:signup }
 
 login:
     pattern: /login
-    defaults: { _controller: DiktaplusBundle:Default:login }
+    defaults: { _controller: DiktaplusBundle:Security:login }
 
 login_check:
     pattern: /login_check
