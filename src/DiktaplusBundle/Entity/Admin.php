@@ -3,6 +3,7 @@
 namespace DiktaplusBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * Admin
@@ -10,7 +11,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Table(name="admin")
  * @ORM\Entity(repositoryClass="DiktaplusBundle\Repository\AdminRepository")
  */
-class Admin
+class Admin implements UserInterface
 {
     /**
      * @var int
@@ -90,5 +91,22 @@ class Admin
     public function getPassword()
     {
         return $this->password;
+    }
+
+    public function getRoles()
+    {
+        return false;
+    }
+    public function getSalt()
+    {
+        return false;
+    }
+    public function getUsername()
+    {
+        return $this->getEmail();
+    }
+    public function eraseCredentials()
+    {
+        return false;
     }
 }

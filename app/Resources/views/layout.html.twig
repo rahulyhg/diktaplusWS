@@ -42,6 +42,16 @@
                         Diktaplus Admin Interface
                     </a>
                 </li>
+                <li>
+                    <a href="{{ path('diktaplus_login') }}">
+                        Login
+                    </a>
+                </li>
+                <li>
+                    <a href="{{ path('diktaplus_signup') }}">
+                        Signup new admin
+                    </a>
+                </li>
             </ul>
         </div>
         <!-- /#sidebar-wrapper -->
@@ -50,6 +60,9 @@
 
     <!-- Page Content -->
     <div id="page-content-wrapper">
+    {% for message in app.session.flashbag().get('info') %}
+        <p class="info">{{ message }}</p>
+    {% endfor %}
     {% block content %}{% endblock %}
     </div>
     <!-- /#page-content-wrapper -->
