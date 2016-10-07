@@ -1,21 +1,21 @@
-homepage:
+welcome:
     path:     /
     defaults: { _controller: DiktaplusBundle:Default:index }
 
-welcome:
-    path:     /welcome
-    defaults: { _controller: DiktaplusBundle:Default:welcome }
+texts:
+    path:     /texts
+    defaults: { _controller: DiktaplusBundle:Default:texts }
 
 signup:
     pattern:  /signup
     defaults: { _controller: DiktaplusBundle:Default:signup }
 
 login:
-  pattern: /login
-  defaults: { _controller: DiktaplusBundle:Default:login }
+    pattern: /login
+    defaults: { _controller: DiktaplusBundle:Default:login }
 
 login_check:
-   pattern: /login_check
+    pattern: /login_check
 
 logout:
-  pattern: /logout
+    pattern: /logout

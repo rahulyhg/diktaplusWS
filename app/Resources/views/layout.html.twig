@@ -10,7 +10,7 @@
     <meta name="author" content="">
 
     <title>{% block title %}DiktaPlus Admin Inteface{% endblock %}</title>
-    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}" />
+    <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
 
 
     <!-- Bootstrap Core CSS -->
@@ -27,7 +27,6 @@
     <![endif]-->
 
 
-
 </head>
 
 <body>
@@ -42,16 +41,30 @@
                         Diktaplus Admin Interface
                     </a>
                 </li>
-                <li>
-                    <a href="{{ path('login') }}">
-                        Login
-                    </a>
-                </li>
-                <li>
-                    <a href="{{ path('signup') }}">
-                        Signup new admin
-                    </a>
-                </li>
+
+                {% if app.user %}
+                    <li>
+                        <a href="{{ path('texts') }}">
+                            Manage texts
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('signup') }}">
+                            Signup a new admin
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('logout') }}">
+                            Logout
+                        </a>
+                    </li>
+                {% else %}
+                    <li>
+                        <a href="{{ path('login') }}">
+                            Login
+                        </a>
+                    </li>
+                {% endif %}
             </ul>
         </div>
         <!-- /#sidebar-wrapper -->
@@ -61,19 +74,17 @@
     <!-- Page Content -->
     <div id="page-content-wrapper">
         <a type="button" class="btn btn-info" id="menu-toggle">Show/hide sidebar</a>
-         {% if app.user %}
-             Logged in as:
-         {% elseif not app.user %}
+        {% if app.user %}
+            Logged in as: {{ app.user }}
+        {% elseif not app.user %}
             Not logged in
         {% endif %}
         {% for message in app.session.flashbag().get('info') %}
         <div class="alert alert-info">
             <p class="info">{{ message }}</p>
-    {% endfor %}
-
-
-    {% block content %}{% endblock %}
-    </div>
+            {% endfor %}
+            {% block content %}{% endblock %}
+        </div>
     </div>
     <!-- /#page-content-wrapper -->
 
@@ -88,7 +99,7 @@
 
 <!-- Menu Toggle Script -->
 <script>
-    $("#menu-toggle").click(function(e) {
+    $("#menu-toggle").click(function (e) {
         e.preventDefault();
         $("#wrapper").toggleClass("toggled");
     });

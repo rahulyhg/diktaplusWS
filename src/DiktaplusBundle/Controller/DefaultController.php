@@ -19,11 +19,12 @@ class DefaultController extends Controller
 
     public function indexAction()
     {
-        return $this->redirect($this->generateURL('welcome'));
-    }
-    public function welcomeAction()
-    {
         return $this->render('DiktaplusBundle:Default:welcome.html.twig');
+    }
+
+    public function textsAction()
+    {
+        return $this->render('DiktaplusBundle:Default:texts.html.twig');
     }
 
     public function signupAction(Request $request) {
