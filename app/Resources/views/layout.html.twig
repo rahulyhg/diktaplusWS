@@ -48,7 +48,12 @@
                     {% endif %}
                     <li>
                         <a href="{{ path('texts') }}">
-                            Text management
+                            Texts management
+                        </a>
+                    </li>
+                    <li>
+                        <a href="{{ path('users') }}">
+                            Users management
                         </a>
                     </li>
                     <li>
@@ -81,7 +86,9 @@
                 {{ message }}
         {% endfor %}
         <div style="margin-top:15px;">
-        {% block content %}{% endblock %}
+            {% if app.user  %}
+            {% block content %}{% endblock %}
+            {% endif %}
             </div>
     </div>
 </div>

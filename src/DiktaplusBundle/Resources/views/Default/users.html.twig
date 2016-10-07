@@ -1,0 +1,28 @@
+{% extends 'layout.html.twig' %}
+{% block content %}
+    <table class="table table-bordered">
+        <tr>
+            <th>ID</th>
+            <th>E-mail</th>
+            <th>Username</th>
+            <th>Country</th>
+            <th>Total score</th>
+            <th>Level</th>
+            <th>Options</th>
+        </tr>
+    {% for user in users %}
+        <tr>
+            <td>{{ user.id }}</td>
+            <td>{{ user.email }}</td>
+            <td>{{ user.username }}</td>
+            <td>{{ user.country }}</td>
+            <td>{{ user.totalScore }}</td>
+            <td>{{ user.level }}</td>
+            <td><a href="{{ path('users_edit', { 'id': user.id }) }}" class="btn btn-warning">Edit</a>
+            <a href="{{ path('users_delete', { 'id': user.id }) }}" class="btn btn-danger">Delete</a></td>
+        </tr>
+    {% endfor %}
+    </table>
+    <a type="button" href="{{ path('users_add') }}" class="btn btn-success">Add user</a>
+
+{% endblock %}

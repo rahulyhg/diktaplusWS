@@ -18,6 +18,22 @@ texts_delete:
     path:     /textsdelete{id}
     defaults: { _controller: DiktaplusBundle:Texts:deleteText }
 
+users:
+    path:     /users
+    defaults: { _controller: DiktaplusBundle:Users:users }
+
+users_add:
+    path:     /usersadd
+    defaults: { _controller: DiktaplusBundle:Users:addUser }
+
+users_edit:
+    path:     /usersedit{id}
+    defaults: { _controller: DiktaplusBundle:Users:editUser }
+
+users_delete:
+    path:     /usersdelete{id}
+    defaults: { _controller: DiktaplusBundle:Users:deleteUser }
+
 signup:
     pattern:  /signup
     defaults: { _controller: DiktaplusBundle:Security:signup }

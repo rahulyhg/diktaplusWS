@@ -56,14 +56,14 @@ class User
      *
      * @ORM\Column(name="totalScore", type="bigint")
      */
-    private $totalScore;
+    private $totalScore = 0;
 
     /**
      * @var int
      *
      * @ORM\Column(name="level", type="integer")
      */
-    private $level;
+    private $level = 0;
 
     /**
      * @ORM\ManyToOne(targetEntity="User", inversedBy="friends")
