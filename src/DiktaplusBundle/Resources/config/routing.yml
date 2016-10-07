@@ -1,3 +1,7 @@
 diktaplus_homepage:
     path:     /
     defaults: { _controller: DiktaplusBundle:Default:login }
+
+diktaplus_signup:
+    pattern:  /signup
+    defaults: { _controller: DiktaplusBundle:Default:signup }
