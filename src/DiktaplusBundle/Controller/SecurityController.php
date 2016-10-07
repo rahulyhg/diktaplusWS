@@ -38,7 +38,7 @@ class SecurityController extends Controller
 
         }
         return $this->render('DiktaplusBundle:Default:form.html.twig',
-            array('form' => $form->createView(),'form_title' => "Sign up"));
+            array('form' => $form->createView(),'form_title' => "Sign up a new administrator"));
     }
 
 

@@ -7,15 +7,15 @@ texts:
     defaults: { _controller: DiktaplusBundle:Texts:texts }
 
 texts_add:
-    path:     /texts/add
+    path:     /textsadd
     defaults: { _controller: DiktaplusBundle:Texts:addText }
 
 texts_edit:
-    path:     /texts/edit/{id}
+    path:     /textsedit{id}
     defaults: { _controller: DiktaplusBundle:Texts:editText }
 
 texts_delete:
-    path:     /texts/delete/{id}
+    path:     /textsdelete{id}
     defaults: { _controller: DiktaplusBundle:Texts:deleteText }
 
 signup:

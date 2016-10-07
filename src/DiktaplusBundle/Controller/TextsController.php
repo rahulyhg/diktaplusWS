@@ -48,7 +48,7 @@ class TextsController extends Controller
         $text = $em->getRepository('DiktaplusBundle:Text')->find($id);
         if (!$text) {
             throw $this->createNotFoundException(
-                'No news found for id ' . $id
+                'No text found for id ' . $id
             );
         }
 
@@ -62,6 +62,25 @@ class TextsController extends Controller
         }
         return $this->render('DiktaplusBundle:Default:form.html.twig',
             array('form' => $form->createView(),'form_title' => "Edit text ".$id));
+    }
+
+    public function deleteTextAction($id, Request $request) {
+
+        $em = $this->getDoctrine()->getManager();
+        $text = $em->getRepository('DiktaplusBundle:Text')->find($id);
+        if (!$text) {
+            throw $this->createNotFoundException(
+                'No text found for id ' . $id
+            );
+        }
+        $em->remove($text);
+        $em->flush();
+        $this->session->getFlashBag()->add('info', 'Text successfully deleted');
+
+        $repository = $this->getDoctrine()
+            ->getRepository('DiktaplusBundle:Text');
+        $texts = $repository->findAll();
+        return $this->render('DiktaplusBundle:Default:texts.html.twig',array('texts' => $texts));
     }
 
 

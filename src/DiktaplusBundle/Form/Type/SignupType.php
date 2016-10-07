@@ -20,7 +20,7 @@ class SignupType extends AbstractType {
                 'first_options' => array('label' => 'Password: ',"attr" => array('class' => 'form-control')),
                 'second_options' => array('label' => 'Repeat password: ',"attr" => array('class' => 'form-control'))))
 
-            ->add('Submit', 'submit',array("attr" => array('class' => 'btn btn-success', 'style' => 'margin-top:20px;')));
+            ->add('Submit', 'submit',array("attr" => array('class' => 'btn btn-success', 'style' => 'margin-top:15px;')));
     }
 
     public function getName() {
