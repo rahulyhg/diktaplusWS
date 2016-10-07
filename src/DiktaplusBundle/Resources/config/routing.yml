@@ -7,7 +7,7 @@ texts:
     defaults: { _controller: DiktaplusBundle:Texts:texts }
 
 texts_add:
-    path:     /texts/add/
+    path:     /texts/add
     defaults: { _controller: DiktaplusBundle:Texts:addText }
 
 texts_show:

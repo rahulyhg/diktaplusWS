@@ -81,14 +81,14 @@
         {% endif %}
         <br/>
         {% for message in app.session.flashbag().get('info') %}
-        <div class="alert alert-info">
-            <p class="info">{{ message }}</p>
-            {% endfor %}
-            <br/>
-            {% block content %}{% endblock %}
-        </div>
+            <div class="alert alert-info">
+                <p class="info">{{ message }}</p></div>
+        {% endfor %}
+        <br/>
+        {% block content %}{% endblock %}
     </div>
-    <!-- /#page-content-wrapper -->
+</div>
+<!-- /#page-content-wrapper -->
 
 </div>
 <!-- /#wrapper -->

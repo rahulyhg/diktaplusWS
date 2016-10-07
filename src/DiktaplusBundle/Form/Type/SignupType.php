@@ -10,7 +10,7 @@ class SignupType extends AbstractType {
 
     public function buildForm(FormBuilderInterface $builder, array $options) {
         $builder->add('email', 'email', array("label" => "Email: ",
-                "required" => false,
+                "required" => true,
                 "attr" => array('class' => 'form-control')))
 
             ->add('password', 'repeated', array(
@@ -20,7 +20,7 @@ class SignupType extends AbstractType {
                 'first_options' => array('label' => 'Password: ',"attr" => array('class' => 'form-control')),
                 'second_options' => array('label' => 'Repeat password: ',"attr" => array('class' => 'form-control'))))
 
-            ->add('Submit', 'submit',array("attr" => array('class' => 'btn btn-success')));
+            ->add('Submit', 'submit',array("attr" => array('class' => 'btn btn-success', 'style' => 'margin-top:20px;')));
     }
 
     public function getName() {
