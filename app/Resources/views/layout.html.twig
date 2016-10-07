@@ -38,17 +38,17 @@
         <div id="sidebar-wrapper">
             <ul class="sidebar-nav">
                 <li class="sidebar-brand">
-                    <a href="{{ path('diktaplus_homepage') }}">
+                    <a href="{{ path('homepage') }}">
                         Diktaplus Admin Interface
                     </a>
                 </li>
                 <li>
-                    <a href="{{ path('diktaplus_login') }}">
+                    <a href="{{ path('login') }}">
                         Login
                     </a>
                 </li>
                 <li>
-                    <a href="{{ path('diktaplus_signup') }}">
+                    <a href="{{ path('signup') }}">
                         Signup new admin
                     </a>
                 </li>
@@ -61,6 +61,11 @@
     <!-- Page Content -->
     <div id="page-content-wrapper">
         <a type="button" class="btn btn-info" id="menu-toggle">Show/hide sidebar</a>
+         {% if app.user %}
+             Logged in as:
+         {% elseif not app.user %}
+            Not logged in
+        {% endif %}
         {% for message in app.session.flashbag().get('info') %}
         <div class="alert alert-info">
             <p class="info">{{ message }}</p>

@@ -95,7 +95,7 @@ class Admin implements UserInterface
 
     public function getRoles()
     {
-        return false;
+        return array('ROLE_ADMIN');
     }
     public function getSalt()
     {
