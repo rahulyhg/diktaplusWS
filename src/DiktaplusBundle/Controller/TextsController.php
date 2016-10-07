@@ -42,5 +42,27 @@ class TextsController extends Controller
             array('form' => $form->createView(),'form_title' => "Add a new text"));
     }
 
+    public function editTextAction($id, Request $request) {
+
+        $em = $this->getDoctrine()->getManager();
+        $text = $em->getRepository('DiktaplusBundle:Text')->find($id);
+        if (!$text) {
+            throw $this->createNotFoundException(
+                'No news found for id ' . $id
+            );
+        }
+
+        $form = $this->createForm(new TextType(), $text);
+        $form->handleRequest($request);
+
+        if ($form->isValid()) {
+            $em->flush();
+            $this->session->getFlashBag()->add('info', 'Text successfully modified');
+            return $this->redirect($this->generateURL('texts'));
+        }
+        return $this->render('DiktaplusBundle:Default:form.html.twig',
+            array('form' => $form->createView(),'form_title' => "Edit text ".$id));
+    }
+
 
 }

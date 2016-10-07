@@ -10,10 +10,6 @@ texts_add:
     path:     /texts/add
     defaults: { _controller: DiktaplusBundle:Texts:addText }
 
-texts_show:
-    path:     /texts/show/{id}
-    defaults: { _controller: DiktaplusBundle:Texts:showText }
-
 texts_edit:
     path:     /texts/edit/{id}
     defaults: { _controller: DiktaplusBundle:Texts:editText }
