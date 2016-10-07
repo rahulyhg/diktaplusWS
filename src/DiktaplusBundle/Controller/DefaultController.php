@@ -14,7 +14,7 @@ class DefaultController extends Controller
         $this->session = new Session();
     }
 
-    public function indexAction()
+    public function welcomeAction()
     {
         return $this->render('DiktaplusBundle:Default:welcome.html.twig');
     }
