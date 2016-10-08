@@ -9,5 +9,6 @@
 /app/phpunit.xml
 /build/
 /vendor/
+!vendor/autoload.php
 /bin/
 /composer.phar
