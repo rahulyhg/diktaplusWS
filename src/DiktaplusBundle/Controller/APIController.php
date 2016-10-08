@@ -15,6 +15,8 @@ class APIController extends FOSRestController
     public function getUserAction() {
         $view = View::create();
         $view->setData(array("hey"=>"hola","hey"=>"holi"));
-return $this->handleView($view);    }
+        $view->setFormat("json");
+        return $this->handleView($view);
+    }
 
 }
