@@ -1,0 +1,3 @@
+get_user:
+    path:     /user/{id}
+    defaults: { _controller: DiktaplusBundle:API:getUser }
