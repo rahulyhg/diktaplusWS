@@ -15,6 +15,7 @@ class TextType extends AbstractType {
 
         $builder->add('language', LanguageType::class, array(
             'required' => true,
+            "attr" => array('class' => 'form-control')
         ));
 
         $builder->add('difficulty', ChoiceType::class, array(
@@ -25,11 +26,16 @@ class TextType extends AbstractType {
             ),
             'required' => true,
             'choices_as_values' => true,
+            "attr" => array('class' => 'form-control')
+
         ));
 
         $builder->add('content', TextareaType::class, array(
             'attr' => array('class' => 'tinymce'),
-            'required' => 'true'
+            'required' => 'true',
+            "attr" => array('class' => 'form-control')
+
+
         ));
 
 
