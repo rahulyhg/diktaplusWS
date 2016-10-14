@@ -23,6 +23,10 @@ get-texts:
     defaults: { _controller: DiktaplusBundle:API:getTexts }
     methods:  GET
 
+post-game:
+    path:     /games/add
+    defaults: { _controller: DiktaplusBundle:API:postGame }
+    methods:  POST
 
 
 get-ranking:

@@ -2,6 +2,7 @@
 
 namespace DiktaplusBundle\Controller;
 
+use DiktaplusBundle\Entity\Game;
 use FOS\RestBundle\Controller\FOSRestController;
 use DiktaplusBundle\Entity\User;
 use DiktaplusBundle\Entity\Text;
@@ -33,7 +34,7 @@ class APIController extends FOSRestController
     public function getUserAction($id) {
         $repository = $this->getDoctrine()
             ->getRepository('DiktaplusBundle:User');
-        $user = $repository->find($id);
+        $user = $repository->findOneById($id);
         if (!$user) {
             $response = new Response('Error getting user info');
             $response->setStatusCode(500);
@@ -116,4 +117,32 @@ class APIController extends FOSRestController
         $view->setFormat("json");
         return $this->handleView($view);
     }
+
+    public function postGameAction(Request $request) {
+
+        $data = json_decode($request->getContent(), true);
+        $em = $this->getDoctrine()->getManager();
+
+        $game = new Game();
+        $user = $em->getRepository('DiktaplusBundle:User')->findOneById($data['user']);
+        $text = $em->getRepository('DiktaplusBundle:Text')->findOneById($data['text']);
+
+
+        $game->setUser($user);
+        $game->setText($text);
+        $game->setScore($data['score']);
+
+        $em->persist($game);
+        $user->setTotalScore($user->getTotalScore() + $game->getScore());
+        if (!$user) {
+            throw $this->createNotFoundException(
+                'No user found'
+            );
+        }
+
+        $em->flush();
+        return new Response('Game successfully uploaded and user score updated');
+
+    }
+
 }
