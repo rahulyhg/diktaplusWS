@@ -22,3 +22,11 @@ get-texts:
     path:     /texts/{language}/{difficulty}
     defaults: { _controller: DiktaplusBundle:API:getTexts }
     methods:  GET
+
+
+
+get-ranking:
+    path:     /rankings/{country}/{cnt}
+    defaults: { _controller: DiktaplusBundle:API:getRanking }
+    methods:  GET
+

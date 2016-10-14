@@ -79,7 +79,6 @@ class APIController extends FOSRestController
     }
 
     public function getTextsAction($language, $difficulty) {
-        $repository = $this->getDoctrine()->getManager()->getRepository('DiktaplusBundle:Text');
         $em = $this->getDoctrine()->getEntityManager();
         $dql = 'select a from DiktaplusBundle:Text a where a.language=:language and a.difficulty like :difficulty';
         $query = $em->createQuery($dql);
@@ -94,6 +93,26 @@ class APIController extends FOSRestController
         }
         $view = View::create();
         $view->setData($texts);
+        $view->setFormat("json");
+        return $this->handleView($view);
+    }
+
+    public function getRankingAction($country, $cnt) {
+        $em = $this->getDoctrine()->getEntityManager();
+        $dql = 'select a from DiktaplusBundle:User a where a.country=:country order by a.totalScore desc';
+        $query = $em->createQuery($dql);
+        $query->setParameter('country', $country);
+        $query->setMaxResults($cnt);
+
+        $ranking = $query->getResult();
+
+        if (!$ranking) {
+            $response = new Response('No ranking for that contry');
+            $response->setStatusCode(500);
+            return $response;
+        }
+        $view = View::create();
+        $view->setData($ranking);
         $view->setFormat("json");
         return $this->handleView($view);
     }
