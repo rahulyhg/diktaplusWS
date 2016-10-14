@@ -125,22 +125,26 @@ class APIController extends FOSRestController
     }
 
     // Gets the best score in a game between a user and a text
-    public function getBestScore($user, $text) {
+    public function getBestScoreAction($user, $text) {
+
         $em = $this->getDoctrine()->getEntityManager();
-        $dql = 'select a from DiktaplusBundle:User a where a.country=:country order by a.totalScore desc';
+        $dql = 'select a.id,a.score from DiktaplusBundle:Game a where a.text=:text and a.user=:user order by a.score desc';
         $query = $em->createQuery($dql);
-        $query->setParameter('country', $country);
-        $query->setMaxResults($cnt);
 
-        $ranking = $query->getResult();
 
-        if (!$ranking) {
-            $response = new Response('No ranking for that contry');
+        $query->setParameter('text', $text);
+        $query->setParameter('user', $user);
+        $query->setMaxResults(1);
+
+        $bestGame = $query->getResult();
+
+        if (!$bestGame) {
+            $response = new Response('This user has not played this text');
             $response->setStatusCode(404);
             return $response;
         }
         $view = View::create();
-        $view->setData($ranking);
+        $view->setData($bestGame);
         $view->setFormat("json");
         return $this->handleView($view);
     }
