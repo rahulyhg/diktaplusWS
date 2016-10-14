@@ -1,0 +1,20 @@
+post-user:
+    path:     /users/add
+    defaults: { _controller: DiktaplusBundle:API:postUser }
+    methods:  POST
+
+get-user:
+    path:     /users/{id}
+    defaults: { _controller: DiktaplusBundle:API:getUser }
+    methods:  GET
+
+put-user:
+    path:     /users/{id}
+    defaults: { _controller: DiktaplusBundle:API:putUser }
+    methods:  PUT
+
+delete-user:
+    path:     /users/{id}
+    defaults: { _controller: DiktaplusBundle:API:deleteUser }
+    methods:  DELETE
+
