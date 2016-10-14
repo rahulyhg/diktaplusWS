@@ -28,6 +28,10 @@ post-game:
     defaults: { _controller: DiktaplusBundle:API:postGame }
     methods:  POST
 
+get-best-score:
+    path:     /games/{user}/{text}
+    defaults: { _controller: DiktaplusBundle:API:getBestScore }
+    methods:  GET
 
 get-ranking:
     path:     /rankings/{country}/{cnt}

@@ -124,6 +124,27 @@ class APIController extends FOSRestController
         return $this->handleView($view);
     }
 
+    // Gets the best score in a game between a user and a text
+    public function getBestScore($user, $text) {
+        $em = $this->getDoctrine()->getEntityManager();
+        $dql = 'select a from DiktaplusBundle:User a where a.country=:country order by a.totalScore desc';
+        $query = $em->createQuery($dql);
+        $query->setParameter('country', $country);
+        $query->setMaxResults($cnt);
+
+        $ranking = $query->getResult();
+
+        if (!$ranking) {
+            $response = new Response('No ranking for that contry');
+            $response->setStatusCode(404);
+            return $response;
+        }
+        $view = View::create();
+        $view->setData($ranking);
+        $view->setFormat("json");
+        return $this->handleView($view);
+    }
+
     // Post a new game, updates user score and user level if needed
     public function postGameAction(Request $request) {
 
@@ -153,11 +174,14 @@ class APIController extends FOSRestController
         $em->persist($game);
         $user->setTotalScore($user->getTotalScore() + $game->getScore());
 
-        //Level up
-        if ($user->getTotalScore() % 1000  > $user->getLevel()) {
+        //Level up formula: if (actualscore / 1000+actuallevel*200 > actual level)
+        if ($user->getTotalScore() / (1000+($user->getLevel()*100))  > $user->getLevel()) {
             $user->setLevel($user->getLevel()+1);
             $em->flush();
-            return new Response('¡LEVEL UP! Game successfully uploaded and user score updated');
+            $view = View::create();
+            $view->setData(array("levelup" => $user->getLevel()));
+            $view->setFormat("json");
+            return $this->handleView($view);
         }
         $em->flush();
         return new Response('Game successfully uploaded and user score updated');
