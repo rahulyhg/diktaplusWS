@@ -223,4 +223,9 @@ class User
     {
         return $this->level;
     }
+
+
+    public function __toString() {
+        return "Usuario".$this->getUsername().$this->getEmail().$this->getCountry().$this->getPassword();
+    }
 }

@@ -15,29 +15,32 @@ class APIController extends FOSRestController
 {
     public function postUserAction(Request $request) {
 
-
-        $user = new User();
-
-        $form = $this->createForm(new UserType(), $user, array("method" => $request->getMethod()));
-        $form->handleRequest($request);
-        $request->getContent();
         if ($request->getMethod()=="POST") {;
-            if ($form->isValid()) {
-                $em = $this->getDoctrine()->getManager();
-                $em->persist($user);
-                $em->flush();
-                return new Response('User successfully added');
-            }
-            return new Response('Parameters are not valid');
+            $data = json_decode($request->getContent(), true);
+            $user = new User();
+
+            $user->setUsername($data['username']);
+            $user->setEmail($data['email']);
+            $user->setCountry($data['country']);
+            $user->setPassword($data['password']);
+
+            $em = $this->getDoctrine()->getManager();
+            $em->persist($user);
+            $em->flush();
+            return new Response('User successfully added');
         }
-        return new Response('No a POST method');
+        $response = new Response("Error");
+        $response->setStatusCode(500);
+        return $response;
     }
     public function getUserAction($id) {
         $repository = $this->getDoctrine()
             ->getRepository('DiktaplusBundle:User');
         $user = $repository->find($id);
         if (!$user) {
-            return new Response('Error getting user info');
+            $response = new Response('Error getting user info');
+            $response->setStatusCode(500);
+            return $response;
         }
         $view = View::create();
         $view->setData($user);
@@ -48,7 +51,9 @@ class APIController extends FOSRestController
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('DiktaplusBundle:User')->find($id);
         if (!$user) {
-            return new Response('Error deleting user');
+            $response = new Response('Error deleting user');
+            $response->setStatusCode(500);
+            return $response;
         }
         $em->remove($user);
         $em->flush();
