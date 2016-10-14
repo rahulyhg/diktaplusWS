@@ -14,6 +14,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class APIController extends FOSRestController
 {
+    // Parses the json object and creates a new user
     public function postUserAction(Request $request) {
 
         $data = json_decode($request->getContent(), true);
@@ -31,13 +32,14 @@ class APIController extends FOSRestController
 
     }
 
+    // Finds the user with ID and returns it as json object
     public function getUserAction($id) {
         $repository = $this->getDoctrine()
             ->getRepository('DiktaplusBundle:User');
         $user = $repository->findOneById($id);
         if (!$user) {
-            $response = new Response('Error getting user info');
-            $response->setStatusCode(500);
+            $response = new Response('No user with that ID');
+            $response->setStatusCode(404);
             return $response;
         }
         $view = View::create();
@@ -46,6 +48,7 @@ class APIController extends FOSRestController
         return $this->handleView($view);
     }
 
+    // Updates the user with ID with params in json object
     public function putUserAction(Request $request, $id) {
 
         $data = json_decode($request->getContent(), true);
@@ -66,12 +69,13 @@ class APIController extends FOSRestController
 
     }
 
+    // Deletes the user with ID
     public function deleteUserAction($id) {
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('DiktaplusBundle:User')->find($id);
         if (!$user) {
-            $response = new Response('Error deleting user');
-            $response->setStatusCode(500);
+            $response = new Response('No user with that ID');
+            $response->setStatusCode(404);
             return $response;
         }
         $em->remove($user);
@@ -79,6 +83,7 @@ class APIController extends FOSRestController
         return new Response('User successfully deleted');
     }
 
+    // Gets a list of texts filtered by language and difficulty
     public function getTextsAction($language, $difficulty) {
         $em = $this->getDoctrine()->getEntityManager();
         $dql = 'select a from DiktaplusBundle:Text a where a.language=:language and a.difficulty like :difficulty';
@@ -89,7 +94,7 @@ class APIController extends FOSRestController
 
         if (!$texts) {
             $response = new Response('No texts');
-            $response->setStatusCode(500);
+            $response->setStatusCode(404);
             return $response;
         }
         $view = View::create();
@@ -98,6 +103,7 @@ class APIController extends FOSRestController
         return $this->handleView($view);
     }
 
+    // Gets a list of cnt users filtered by country
     public function getRankingAction($country, $cnt) {
         $em = $this->getDoctrine()->getEntityManager();
         $dql = 'select a from DiktaplusBundle:User a where a.country=:country order by a.totalScore desc';
@@ -109,7 +115,7 @@ class APIController extends FOSRestController
 
         if (!$ranking) {
             $response = new Response('No ranking for that contry');
-            $response->setStatusCode(500);
+            $response->setStatusCode(404);
             return $response;
         }
         $view = View::create();
@@ -118,6 +124,7 @@ class APIController extends FOSRestController
         return $this->handleView($view);
     }
 
+    // Post a new game, updates user score and user level if needed
     public function postGameAction(Request $request) {
 
         $data = json_decode($request->getContent(), true);
@@ -127,6 +134,17 @@ class APIController extends FOSRestController
         $user = $em->getRepository('DiktaplusBundle:User')->findOneById($data['user']);
         $text = $em->getRepository('DiktaplusBundle:Text')->findOneById($data['text']);
 
+        if (!$user) {
+            $response = new Response('No user with that ID');
+            $response->setStatusCode(404);
+            return $response;
+        }
+
+        if (!$text) {
+            $response = new Response('No text with that ID');
+            $response->setStatusCode(404);
+            return $response;
+        }
 
         $game->setUser($user);
         $game->setText($text);
@@ -134,12 +152,13 @@ class APIController extends FOSRestController
 
         $em->persist($game);
         $user->setTotalScore($user->getTotalScore() + $game->getScore());
-        if (!$user) {
-            throw $this->createNotFoundException(
-                'No user found'
-            );
-        }
 
+        //Level up
+        if ($user->getTotalScore() % 1000  > $user->getLevel()) {
+            $user->setLevel($user->getLevel()+1);
+            $em->flush();
+            return new Response('¡LEVEL UP! Game successfully uploaded and user score updated');
+        }
         $em->flush();
         return new Response('Game successfully uploaded and user score updated');
 
