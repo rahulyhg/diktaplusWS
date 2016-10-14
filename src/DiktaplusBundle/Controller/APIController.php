@@ -2,9 +2,9 @@
 
 namespace DiktaplusBundle\Controller;
 
-use DiktaplusBundle\Form\Type\UserType;
 use FOS\RestBundle\Controller\FOSRestController;
 use DiktaplusBundle\Entity\User;
+use DiktaplusBundle\Entity\Text;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -76,5 +76,25 @@ class APIController extends FOSRestController
         $em->remove($user);
         $em->flush();
         return new Response('User successfully deleted');
+    }
+
+    public function getTextsAction($language, $difficulty) {
+        $repository = $this->getDoctrine()->getManager()->getRepository('DiktaplusBundle:Text');
+        $em = $this->getDoctrine()->getEntityManager();
+        $dql = 'select a from DiktaplusBundle:Text a where a.language=:language and a.difficulty like :difficulty';
+        $query = $em->createQuery($dql);
+        $query->setParameter('language', $language);
+        $query->setParameter('difficulty', $difficulty);
+        $texts = $query->getResult();
+
+        if (!$texts) {
+            $response = new Response('No texts');
+            $response->setStatusCode(500);
+            return $response;
+        }
+        $view = View::create();
+        $view->setData($texts);
+        $view->setFormat("json");
+        return $this->handleView($view);
     }
 }

@@ -18,3 +18,7 @@ delete-user:
     defaults: { _controller: DiktaplusBundle:API:deleteUser }
     methods:  DELETE
 
+get-texts:
+    path:     /texts/{language}/{difficulty}
+    defaults: { _controller: DiktaplusBundle:API:getTexts }
+    methods:  GET
