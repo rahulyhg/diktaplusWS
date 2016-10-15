@@ -80,9 +80,7 @@ class APIController extends FOSRestController
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('DiktaplusBundle:User')->find($id);
         if (!$user) {
-            throw $this->createNotFoundException(
-                'No user found for id ' . $id
-            );
+            $this->sendJsonResponse('No user with that ID',404);
         }
         $user->setUsername($data['username']);
         $user->setEmail($data['email']);
@@ -90,22 +88,21 @@ class APIController extends FOSRestController
         $user->setPassword($data['password']);
 
         $em->flush();
-        return new Response('User successfully modified');
-
+        $this->sendJsonResponse('User successfully modified',200);
     }
 
-    // Deletes the user with ID
+    // Deletes the user with ID, and the games he has played
     public function deleteUserAction($id) {
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('DiktaplusBundle:User')->find($id);
         if (!$user) {
-            $response = new Response('No user with that ID');
-            $response->setStatusCode(404);
-            return $response;
+            $this->sendJsonResponse('No user with that ID',404);
         }
         $em->remove($user);
+        $games = $em->getRepository('DiktaplusBundle:Game')->findBy(array('user_id' => $id));
+        $em->remove($games);
         $em->flush();
-        return new Response('User successfully deleted');
+        $this->sendJsonResponse('User and his played games successfully deleted',200);
     }
 
     // Gets a list of cnt users filtered by country
@@ -119,14 +116,9 @@ class APIController extends FOSRestController
         $ranking = $query->getResult();
 
         if (!$ranking) {
-            $response = new Response('No ranking for that contry');
-            $response->setStatusCode(404);
-            return $response;
+            $this->sendJsonResponse('No rannking for that country',404);
         }
-        $view = View::create();
-        $view->setData($ranking);
-        $view->setFormat("json");
-        return $this->handleView($view);
+        $this->sendJsonResponse($ranking,200);
     }
 
     // Gets a list of texts filtered by language and difficulty
@@ -139,14 +131,9 @@ class APIController extends FOSRestController
         $texts = $query->getResult();
 
         if (!$texts) {
-            $response = new Response('No texts');
-            $response->setStatusCode(404);
-            return $response;
+            $this->sendJsonResponse('No texts in that language and difficulty ',404);
         }
-        $view = View::create();
-        $view->setData($texts);
-        $view->setFormat("json");
-        return $this->handleView($view);
+        $this->sendJsonResponse($texts,200);
     }
 
     // Gets the best score in a game between a user and a text
@@ -156,22 +143,14 @@ class APIController extends FOSRestController
         $dql = 'select a.id,a.score from DiktaplusBundle:Game a where a.text=:text and a.user=:user order by a.score desc';
         $query = $em->createQuery($dql);
 
-
         $query->setParameter('text', $text);
         $query->setParameter('user', $user);
         $query->setMaxResults(1);
-
         $bestGame = $query->getResult();
-
         if (!$bestGame) {
-            $response = new Response('This user has not played this text');
-            $response->setStatusCode(404);
-            return $response;
+            $this->sendJsonResponse('The user has no games',404);
         }
-        $view = View::create();
-        $view->setData($bestGame);
-        $view->setFormat("json");
-        return $this->handleView($view);
+        $this->sendJsonResponse($bestGame,200);
     }
 
     // Post a new game, updates user score and user level if needed
@@ -185,15 +164,10 @@ class APIController extends FOSRestController
         $text = $em->getRepository('DiktaplusBundle:Text')->findOneById($data['text']);
 
         if (!$user) {
-            $response = new Response('No user with that ID');
-            $response->setStatusCode(404);
-            return $response;
+            $this->sendJsonResponse('No user with that ID',404);
         }
-
         if (!$text) {
-            $response = new Response('No text with that ID');
-            $response->setStatusCode(404);
-            return $response;
+            $this->sendJsonResponse('No text with that ID',404);
         }
 
         $game->setUser($user);
@@ -207,14 +181,10 @@ class APIController extends FOSRestController
         if ($user->getTotalScore() / (1000+($user->getLevel()*100))  > $user->getLevel()) {
             $user->setLevel($user->getLevel()+1);
             $em->flush();
-            $view = View::create();
-            $view->setData(array("levelup" => $user->getLevel()));
-            $view->setFormat("json");
-            return $this->handleView($view);
+            $this->sendJsonResponse(array("levelup" => $user->getLevel()),200);
         }
         $em->flush();
-        return new Response('Game successfully uploaded and user score updated');
-
+        $this->sendJsonResponse('Game successfully uploaded and user score updated',200);
     }
 
 }
