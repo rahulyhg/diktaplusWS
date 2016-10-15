@@ -14,8 +14,17 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
 
 class APIController extends FOSRestController
 {
+    // Sends a json response
+    public function sendJsonResponse($data, $code) {
+        $view = View::create();
+        $view->setData($data);
+        $view->setFormat("json");
+        $view->setStatusCode($code);
+        return $this->handleView($view);
+    }
+
     // Parses the json object and creates a new user
-    public function postUserAction(Request $request) {
+    public function registerUserAction(Request $request) {
 
         $data = json_decode($request->getContent(), true);
         $user = new User();
@@ -28,7 +37,28 @@ class APIController extends FOSRestController
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
         $em->flush();
-        return new Response('User successfully added');
+        $this->sendJsonResponse('User successfully added',201);
+
+    }
+
+    // Look up if a user is registered to log him in
+    public function loginUserAction(Request $request) {
+
+        $data = json_decode($request->getContent(), true);
+        $repository = $this->getDoctrine()
+            ->getRepository('DiktaplusBundle:User');
+        $user = $repository->findOneBy(array('username' => $data['username']));
+        if (!$user) {
+            $user = $repository->findOneBy(array('email' => $data['email']));
+        }
+        if (!$user) {
+            return new Response('No user founded');
+        }
+        if ($user->getPassword()==$data['password']) {
+            $this->sendJsonResponse(array("id" => $user->getId()),201);
+        }
+
+        $this->sendJsonResponse('Incorrect password',500);
 
     }
 
@@ -38,14 +68,9 @@ class APIController extends FOSRestController
             ->getRepository('DiktaplusBundle:User');
         $user = $repository->findOneById($id);
         if (!$user) {
-            $response = new Response('No user with that ID');
-            $response->setStatusCode(404);
-            return $response;
+            $this->sendJsonResponse('No user with that ID',404);
         }
-        $view = View::create();
-        $view->setData($user);
-        $view->setFormat("json");
-        return $this->handleView($view);
+        $this->sendJsonResponse($user,200);
     }
 
     // Updates the user with ID with params in json object
@@ -83,26 +108,6 @@ class APIController extends FOSRestController
         return new Response('User successfully deleted');
     }
 
-    // Gets a list of texts filtered by language and difficulty
-    public function getTextsAction($language, $difficulty) {
-        $em = $this->getDoctrine()->getEntityManager();
-        $dql = 'select a from DiktaplusBundle:Text a where a.language=:language and a.difficulty like :difficulty';
-        $query = $em->createQuery($dql);
-        $query->setParameter('language', $language);
-        $query->setParameter('difficulty', $difficulty);
-        $texts = $query->getResult();
-
-        if (!$texts) {
-            $response = new Response('No texts');
-            $response->setStatusCode(404);
-            return $response;
-        }
-        $view = View::create();
-        $view->setData($texts);
-        $view->setFormat("json");
-        return $this->handleView($view);
-    }
-
     // Gets a list of cnt users filtered by country
     public function getRankingAction($country, $cnt) {
         $em = $this->getDoctrine()->getEntityManager();
@@ -120,6 +125,26 @@ class APIController extends FOSRestController
         }
         $view = View::create();
         $view->setData($ranking);
+        $view->setFormat("json");
+        return $this->handleView($view);
+    }
+
+    // Gets a list of texts filtered by language and difficulty
+    public function getTextsAction($language, $difficulty) {
+        $em = $this->getDoctrine()->getEntityManager();
+        $dql = 'select a from DiktaplusBundle:Text a where a.language=:language and a.difficulty like :difficulty';
+        $query = $em->createQuery($dql);
+        $query->setParameter('language', $language);
+        $query->setParameter('difficulty', $difficulty);
+        $texts = $query->getResult();
+
+        if (!$texts) {
+            $response = new Response('No texts');
+            $response->setStatusCode(404);
+            return $response;
+        }
+        $view = View::create();
+        $view->setData($texts);
         $view->setFormat("json");
         return $this->handleView($view);
     }

@@ -1,6 +1,11 @@
-post-user:
+register-user:
     path:     /users/add
-    defaults: { _controller: DiktaplusBundle:API:postUser }
+    defaults: { _controller: DiktaplusBundle:API:registerUser }
+    methods:  POST
+
+login-user:
+    path:     /users/login
+    defaults: { _controller: DiktaplusBundle:API:loginUser }
     methods:  POST
 
 get-user:
@@ -18,6 +23,11 @@ delete-user:
     defaults: { _controller: DiktaplusBundle:API:deleteUser }
     methods:  DELETE
 
+get-ranking:
+    path:     /users/{country}/{cnt}
+    defaults: { _controller: DiktaplusBundle:API:getRanking }
+    methods:  GET
+
 get-texts:
     path:     /texts/{language}/{difficulty}
     defaults: { _controller: DiktaplusBundle:API:getTexts }
@@ -33,8 +43,5 @@ get-best-score:
     defaults: { _controller: DiktaplusBundle:API:getBestScore }
     methods:  GET
 
-get-ranking:
-    path:     /rankings/{country}/{cnt}
-    defaults: { _controller: DiktaplusBundle:API:getRanking }
-    methods:  GET
+
 
