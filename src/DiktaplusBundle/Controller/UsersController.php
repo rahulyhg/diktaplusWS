@@ -64,7 +64,7 @@ class UsersController extends Controller
             array('form' => $form->createView(),'form_title' => "Edit user ".$id));
     }
 
-    public function deleteUserAction($id, Request $request) {
+    public function deleteUserAction($id) {
 
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('DiktaplusBundle:User')->find($id);
@@ -72,6 +72,10 @@ class UsersController extends Controller
             throw $this->createNotFoundException(
                 'No user found for id ' . $id
             );
+        }
+        $games = $em->getRepository('DiktaplusBundle:Game')->findBy(array('user' => $id));
+        foreach ($games as $game) {
+            $em->remove($game);
         }
         $em->remove($user);
         $em->flush();

@@ -120,7 +120,6 @@ class APIController extends FOSRestController
         $query = $em->createQuery($dql);
         $query->setParameter('country', $country);
         $query->setMaxResults($cnt);
-
         $ranking = $query->getResult();
 
         if (!$ranking) {
@@ -156,7 +155,7 @@ class APIController extends FOSRestController
         $query->setMaxResults(1);
         $bestGame = $query->getResult();
         if (!$bestGame) {
-            return $this->sendJsonResponse('The user has no games',404);
+            return $this->sendJsonResponse('The user has not played this text',404);
         }
         return $this->sendJsonResponse($bestGame,200);
     }
