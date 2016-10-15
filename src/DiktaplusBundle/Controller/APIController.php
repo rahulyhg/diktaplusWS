@@ -62,7 +62,7 @@ class APIController extends FOSRestController
             return $this->sendJsonResponse('No user founded',404);
         }
         if ($user->getPassword()==$data['password']) {
-            return $this->sendJsonRespons(array("id" => $user->getId()),200);
+            return $this->sendJsonResponse(array("id" => $user->getId()),200);
         }
 
         return $this->sendJsonResponse('Incorrect password',403);
@@ -104,9 +104,11 @@ class APIController extends FOSRestController
         if (!$user) {
             return $this->sendJsonResponse('No user with that ID',404);
         }
+        $games = $em->getRepository('DiktaplusBundle:Game')->findBy(array('user' => $id));
+        foreach ($games as $game) {
+            $em->remove($game);
+        }
         $em->remove($user);
-        $games = $em->getRepository('DiktaplusBundle:Game')->findBy(array('user_id' => $id));
-        $em->remove($games);
         $em->flush();
         return $this->sendJsonResponse('User and his played games successfully deleted',200);
     }
