@@ -70,9 +70,9 @@ class User
 
     /**
      * @ORM\ManyToMany(targetEntity="User", inversedBy="friends", cascade={"persist"})
-     * @ORM\JoinTable(name="friendships",
+     * @ORM\JoinTable(name="friendship",
      * joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
-     * inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     * inverseJoinColumns={@ORM\JoinColumn(name="user2_id", referencedColumnName="id")}
      * )
      */
     private $friends;
@@ -240,11 +240,8 @@ class User
         return $this->friends;
     }
 
-    /**
-     * @param mixed $friends
-     */
-    public function setFriends($friends)
+    public function addFriend($friend)
     {
-        $this->friends = $friends;
+        $this->friends->add($friend);
     }
 }

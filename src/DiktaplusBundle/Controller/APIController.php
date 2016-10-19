@@ -137,7 +137,7 @@ class APIController extends FOSRestController
         if (!$user1 || !$user2) {
             return $this->sendJsonResponse('No user with that ID',404);
         }
-        $user1->setFriends($user2);
+        $user1->addFriend($user2);
 
         $em->flush();
         return $this->sendJsonResponse('Friendship created',200);
