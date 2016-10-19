@@ -24,8 +24,18 @@ delete-user:
     methods:  DELETE
 
 get-ranking:
-    path:     /users/{country}/{cnt}
+    path:     /users/ranking/{country}/{cnt}
     defaults: { _controller: DiktaplusBundle:API:getRanking }
+    methods:  GET
+
+make-friends:
+    path:     /users/friends/{id1}/{id2}
+    defaults: { _controller: DiktaplusBundle:API:makeFriends }
+    methods:  GET
+
+get-users-by-username:
+    path:     /users/like/{username}
+    defaults: { _controller: DiktaplusBundle:API:getUsersByUsername }
     methods:  GET
 
 get-texts:
@@ -42,6 +52,5 @@ get-best-score:
     path:     /games/{user}/{text}
     defaults: { _controller: DiktaplusBundle:API:getBestScore }
     methods:  GET
-
 
 

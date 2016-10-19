@@ -69,8 +69,11 @@ class User
     private $level = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="friends")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="friends", cascade={"persist"})
+     * @ORM\JoinTable(name="friendships",
+     * joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     * inverseJoinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")}
+     * )
      */
     private $friends;
 
@@ -226,6 +229,22 @@ class User
 
 
     public function __toString() {
-        return "Usuario".$this->getUsername().$this->getEmail().$this->getCountry().$this->getPassword();
+        return $this->getUsername();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFriends()
+    {
+        return $this->friends;
+    }
+
+    /**
+     * @param mixed $friends
+     */
+    public function setFriends($friends)
+    {
+        $this->friends = $friends;
     }
 }

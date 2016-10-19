@@ -128,10 +128,39 @@ class APIController extends FOSRestController
         return $this->sendJsonResponse($ranking,200);
     }
 
+    // Set a user as a friend of another user
+    public function makeFriendsAction($id1,$id2) {
+        $em = $this->getDoctrine()->getManager();
+        $user1 = $em->getRepository('DiktaplusBundle:User')->findOneById($id1);
+        $user2 = $em->getRepository('DiktaplusBundle:User')->findOneById($id2);
+
+        if (!$user1 || !$user2) {
+            return $this->sendJsonResponse('No user with that ID',404);
+        }
+        $user1->setFriends($user2);
+
+        $em->flush();
+        return $this->sendJsonResponse('Friendship created',200);
+    }
+
+    // Gets a list of users with a similar username
+    public function getUsersByUsernameAction($username) {
+        $em = $this->getDoctrine()->getEntityManager();
+        $dql = 'select a from DiktaplusBundle:User a where a.username like :username order by a.totalScore desc';
+        $query = $em->createQuery($dql);
+        $query->setParameter('username', '%'.$username.'%');
+        $results = $query->getResult();
+
+        if (!$results) {
+            return $this->sendJsonResponse('No matching usernames',404);
+        }
+        return $this->sendJsonResponse($results,200);
+    }
+
     // Gets a list of texts filtered by language and difficulty
     public function getTextsAction($language, $difficulty) {
         $em = $this->getDoctrine()->getEntityManager();
-        $dql = 'select a from DiktaplusBundle:Text a where a.language=:language and a.difficulty like :difficulty';
+        $dql = 'select a from DiktaplusBundle:Text a where a.language=:language and a.difficulty=:difficulty';
         $query = $em->createQuery($dql);
         $query->setParameter('language', $language);
         $query->setParameter('difficulty', $difficulty);
