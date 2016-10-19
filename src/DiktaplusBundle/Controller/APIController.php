@@ -128,21 +128,6 @@ class APIController extends FOSRestController
         return $this->sendJsonResponse($ranking,200);
     }
 
-    // Set a user as a friend of another user
-    public function makeFriendsAction($id1,$id2) {
-        $em = $this->getDoctrine()->getManager();
-        $user1 = $em->getRepository('DiktaplusBundle:User')->findOneById($id1);
-        $user2 = $em->getRepository('DiktaplusBundle:User')->findOneById($id2);
-
-        if (!$user1 || !$user2) {
-            return $this->sendJsonResponse('No user with that ID',404);
-        }
-        $user1->addFriend($user2);
-
-        $em->flush();
-        return $this->sendJsonResponse('Friendship created',200);
-    }
-
     // Gets a list of users with a similar username
     public function getUsersByUsernameAction($username) {
         $em = $this->getDoctrine()->getEntityManager();
@@ -155,6 +140,36 @@ class APIController extends FOSRestController
             return $this->sendJsonResponse('No matching usernames',404);
         }
         return $this->sendJsonResponse($results,200);
+    }
+
+    // Set a user as a friend of another user
+    public function makeFriendsAction($id1,$id2) {
+        $em = $this->getDoctrine()->getManager();
+        $user1 = $em->getRepository('DiktaplusBundle:User')->findOneById($id1);
+        $user2 = $em->getRepository('DiktaplusBundle:User')->findOneById($id2);
+
+        if (!$user1 || !$user2) {
+            return $this->sendJsonResponse('No user with that ID',404);
+        }
+        $user1->addFriend($user2);
+
+        $em->flush();
+        return $this->sendJsonResponse('Friendship created',201);
+    }
+
+    // Set a user as a friend of another user
+    public function deleteFriendsAction($id1,$id2) {
+        $em = $this->getDoctrine()->getManager();
+        $user1 = $em->getRepository('DiktaplusBundle:User')->findOneById($id1);
+        $user2 = $em->getRepository('DiktaplusBundle:User')->findOneById($id2);
+
+        if (!$user1 || !$user2) {
+            return $this->sendJsonResponse('No user with that ID',404);
+        }
+        $user1->deleteFriend($user2);
+
+        $em->flush();
+        return $this->sendJsonResponse('Friendship deleted',200);
     }
 
     // Gets a list of texts filtered by language and difficulty

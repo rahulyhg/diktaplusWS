@@ -244,4 +244,9 @@ class User
     {
         $this->friends->add($friend);
     }
+
+    public function deleteFriend($friend)
+    {
+        $this->friends->removeElement($friend);
+    }
 }

@@ -1,3 +1,5 @@
+# ===================== USERS MANAGEMENT =======================
+
 register-user:
     path:     /users/add
     defaults: { _controller: DiktaplusBundle:API:registerUser }
@@ -28,21 +30,31 @@ get-ranking:
     defaults: { _controller: DiktaplusBundle:API:getRanking }
     methods:  GET
 
+get-users-by-username:
+    path:     /users/like/{username}
+    defaults: { _controller: DiktaplusBundle:API:getUsersByUsername }
+    methods:  GET
+
+# ===================== FRIENDS MANAGEMENT =======================
+
 make-friends:
     path:     /users/friends/{id1}/{id2}
     defaults: { _controller: DiktaplusBundle:API:makeFriends }
     methods:  GET
 
-get-users-by-username:
-    path:     /users/like/{username}
-    defaults: { _controller: DiktaplusBundle:API:getUsersByUsername }
-    methods:  GET
+delete-friends:
+    path:     /users/friends/{id1}/{id2}
+    defaults: { _controller: DiktaplusBundle:API:deleteFriends }
+    methods:  DELETE
+
+# ===================== TEXTS MANAGEMENT =======================
 
 get-texts:
     path:     /texts/{language}/{difficulty}
     defaults: { _controller: DiktaplusBundle:API:getTexts }
     methods:  GET
 
+# ===================== GAMES MANAGEMENT =======================
 post-game:
     path:     /games/add
     defaults: { _controller: DiktaplusBundle:API:postGame }
