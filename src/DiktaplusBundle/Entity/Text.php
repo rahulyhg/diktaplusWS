@@ -42,6 +42,13 @@ class Text
      */
     private $content;
 
+    /**
+     * @var string
+     *
+     * @ORM\Column(name="title", type="text", length=100)
+     */
+    private $title;
+
 
     /**
      * Get id
@@ -120,5 +127,28 @@ class Text
     public function getContent()
     {
         return $this->content;
+    }
+
+    /**
+     * Set title
+     *
+     * @param string $title
+     * @return Text
+     */
+    public function setTitle($title)
+    {
+        $this->title = $title;
+
+        return $this;
+    }
+
+    /**
+     * Get title
+     *
+     * @return string
+     */
+    public function getTitle()
+    {
+        return $this->title;
     }
 }
