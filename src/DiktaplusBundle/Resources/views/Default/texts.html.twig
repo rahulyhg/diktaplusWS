@@ -5,6 +5,7 @@
             <th>ID</th>
             <th>Difficulty</th>
             <th>Language</th>
+            <th>Title</th>
             <th>Content</th>
             <th>Options</th>
         </tr>
@@ -13,6 +14,7 @@
             <td>{{ text.id }}</td>
             <td>{{ text.difficulty }}</td>
             <td>{{ text.language }}</td>
+            <td>{{ text.title }}</td>
             <td>{{ text.content }}</td>
             <td><a href="{{ path('texts_edit', { 'id': text.id }) }}" class="btn btn-warning">Edit</a>
             <a href="{{ path('texts_delete', { 'id': text.id }) }}" class="btn btn-danger">Delete</a></td>

@@ -182,7 +182,7 @@ class APIController extends FOSRestController
         $texts = $query->getResult();
 
         if (!$texts) {
-            return $this->sendJsonResponse('No texts with that language and difficulty ',404);
+            return $this->sendJsonResponse(array(array('error' => 'No texts with that language and difficulty')),404);
         }
         return $this->sendJsonResponse($texts,200);
     }
