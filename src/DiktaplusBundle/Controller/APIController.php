@@ -22,7 +22,15 @@ class APIController extends FOSRestController
      * 500 Server error
     */
     // Sends a json response, with data and a status code
-    public function sendJsonResponse($data, $code) {
+    public function sendJsonResponse($data, $code)
+    {
+        if (gettype($data) == "string") $data = array("message" => $data);
+        if ($this->is_assoc($data)) {
+            $data2 = array();
+            array_push($data2, $data);
+            $data = $data2;
+        }
+
         $view = View::create();
         $view->setData($data);
         $view->setFormat("json");
@@ -30,8 +38,19 @@ class APIController extends FOSRestController
         return $this->handleView($view);
     }
 
+    // Checks if an array is associative
+    function is_assoc($array)
+    {
+        foreach (array_keys($array) as $key) {
+            if (!is_int($key)) return true;
+        }
+        return false;
+
+    }
+
     // Parses the json object and creates a new user
-    public function registerUserAction(Request $request) {
+    public function registerUserAction(Request $request)
+    {
 
         $data = json_decode($request->getContent(), true);
         $user = new User();
@@ -44,12 +63,13 @@ class APIController extends FOSRestController
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
         $em->flush();
-        return $this->sendJsonResponse('User successfully created',201);
+        return $this->sendJsonResponse('User successfully created', 201);
 
     }
 
     // Look up if a user is registered to log him in
-    public function loginUserAction(Request $request) {
+    public function loginUserAction(Request $request)
+    {
 
         $data = json_decode($request->getContent(), true);
         $repository = $this->getDoctrine()
@@ -59,34 +79,37 @@ class APIController extends FOSRestController
             $user = $repository->findOneBy(array('email' => $data['email']));
         }
         if (!$user) {
-            return $this->sendJsonResponse('No user founded',404);
+            return $this->sendJsonResponse('No user founded', 404);
         }
-        if ($user->getPassword()==$data['password']) {
-            return $this->sendJsonResponse(array("id" => $user->getId()),200);
+        if ($user->getPassword() == $data['password']) {
+            return $this->sendJsonResponse(array($user), 200);
         }
 
-        return $this->sendJsonResponse('Incorrect password',403);
+        return $this->sendJsonResponse('Incorrect password', 403);
     }
 
-    // Finds the user with ID and returns it as json object
-    public function getUserAction($id) {
-        $repository = $this->getDoctrine()
-            ->getRepository('DiktaplusBundle:User');
-        $user = $repository->findOneById($id);
+
+    // Gets the user info with ID
+    public function getUserInfoAction($id)
+    {
+        $repository = $this->getDoctrine()->getRepository('DiktaplusBundle:User');
+        $user = $repository->find($id);
         if (!$user) {
-            return $this->sendJsonResponse('No user with that ID',404);
+            return $this->sendJsonResponse('No user with that ID', 404);
         }
-        return $this->sendJsonResponse($user,200);
+        return $this->sendJsonResponse(array($user), 200);
     }
+
 
     // Updates the user with ID with params in json object
-    public function putUserAction(Request $request, $id) {
+    public function putUserAction(Request $request, $id)
+    {
 
         $data = json_decode($request->getContent(), true);
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('DiktaplusBundle:User')->find($id);
         if (!$user) {
-            return $this->sendJsonResponse('No user with that ID',404);
+            return $this->sendJsonResponse('No user with that ID', 404);
         }
         $user->setUsername($data['username']);
         $user->setEmail($data['email']);
@@ -94,15 +117,16 @@ class APIController extends FOSRestController
         $user->setPassword($data['password']);
 
         $em->flush();
-        return $this->sendJsonResponse('User successfully modified',200);
+        return $this->sendJsonResponse(array('message' => 'User successfully modified'), 200);
     }
 
     // Deletes the user with ID, and the games he has played
-    public function deleteUserAction($id) {
+    public function deleteUserAction($id)
+    {
         $em = $this->getDoctrine()->getManager();
         $user = $em->getRepository('DiktaplusBundle:User')->find($id);
         if (!$user) {
-            return $this->sendJsonResponse('No user with that ID',404);
+            return $this->sendJsonResponse('No user with that ID', 404);
         }
         $games = $em->getRepository('DiktaplusBundle:Game')->findBy(array('user' => $id));
         foreach ($games as $game) {
@@ -110,11 +134,12 @@ class APIController extends FOSRestController
         }
         $em->remove($user);
         $em->flush();
-        return $this->sendJsonResponse('User and his played games successfully deleted',200);
+        return $this->sendJsonResponse(array('message' => 'User and his games were deleted'), 200);
     }
 
     // Gets a list of cnt users filtered by country
-    public function getRankingAction($country, $cnt) {
+    public function getRankingAction($country, $cnt)
+    {
         $em = $this->getDoctrine()->getEntityManager();
         $dql = 'select a from DiktaplusBundle:User a where a.country=:country order by a.totalScore desc';
         $query = $em->createQuery($dql);
@@ -123,57 +148,61 @@ class APIController extends FOSRestController
         $ranking = $query->getResult();
 
         if (!$ranking) {
-            return $this->sendJsonResponse('No rannking for that country',404);
+            return $this->sendJsonResponse('No rannking for that country', 404);
         }
-        return $this->sendJsonResponse($ranking,200);
+        return $this->sendJsonResponse($ranking, 200);
     }
 
     // Gets a list of users with a similar username
-    public function getUsersByUsernameAction($username) {
+    public function getUsersByUsernameAction($username)
+    {
         $em = $this->getDoctrine()->getEntityManager();
         $dql = 'select a from DiktaplusBundle:User a where a.username like :username order by a.totalScore desc';
         $query = $em->createQuery($dql);
-        $query->setParameter('username', '%'.$username.'%');
+        $query->setParameter('username', '%' . $username . '%');
         $results = $query->getResult();
 
         if (!$results) {
-            return $this->sendJsonResponse('No matching usernames',404);
+            return $this->sendJsonResponse('No matching usernames', 404);
         }
-        return $this->sendJsonResponse($results,200);
+        return $this->sendJsonResponse($results, 200);
     }
 
     // Set a user as a friend of another user
-    public function makeFriendsAction($id1,$id2) {
+    public function makeFriendsAction($id1, $id2)
+    {
         $em = $this->getDoctrine()->getManager();
         $user1 = $em->getRepository('DiktaplusBundle:User')->findOneById($id1);
         $user2 = $em->getRepository('DiktaplusBundle:User')->findOneById($id2);
 
         if (!$user1 || !$user2) {
-            return $this->sendJsonResponse('No user with that ID',404);
+            return $this->sendJsonResponse('No user with that ID', 404);
         }
         $user1->addFriend($user2);
 
         $em->flush();
-        return $this->sendJsonResponse('Friendship created',201);
+        return $this->sendJsonResponse('Friendship created', 201);
     }
 
     // Set a user as a friend of another user
-    public function deleteFriendsAction($id1,$id2) {
+    public function deleteFriendsAction($id1, $id2)
+    {
         $em = $this->getDoctrine()->getManager();
         $user1 = $em->getRepository('DiktaplusBundle:User')->findOneById($id1);
         $user2 = $em->getRepository('DiktaplusBundle:User')->findOneById($id2);
 
         if (!$user1 || !$user2) {
-            return $this->sendJsonResponse('No user with that ID',404);
+            return $this->sendJsonResponse('No user with that ID', 404);
         }
         $user1->deleteFriend($user2);
 
         $em->flush();
-        return $this->sendJsonResponse('Friendship deleted',200);
+        return $this->sendJsonResponse('Friendship deleted', 200);
     }
 
     // Gets a list of texts filtered by language and difficulty
-    public function getTextsAction($language, $difficulty) {
+    public function getTextsAction($language, $difficulty)
+    {
         $em = $this->getDoctrine()->getEntityManager();
         $dql = 'select a from DiktaplusBundle:Text a where a.language=:language and a.difficulty=:difficulty';
         $query = $em->createQuery($dql);
@@ -182,13 +211,14 @@ class APIController extends FOSRestController
         $texts = $query->getResult();
 
         if (!$texts) {
-            return $this->sendJsonResponse(array(array('error' => 'No texts with that language and difficulty')),404);
+            return $this->sendJsonResponse(array(array('error' => 'No texts with that language and difficulty')), 404);
         }
-        return $this->sendJsonResponse($texts,200);
+        return $this->sendJsonResponse($texts, 200);
     }
 
     // Gets the best score in a game between a user and a text
-    public function getBestScoreAction($user, $text) {
+    public function getBestScoreAction($user, $text)
+    {
 
         $em = $this->getDoctrine()->getEntityManager();
         $dql = 'select a.id,a.score from DiktaplusBundle:Game a where a.text=:text and a.user=:user order by a.score desc';
@@ -199,13 +229,14 @@ class APIController extends FOSRestController
         $query->setMaxResults(1);
         $bestGame = $query->getResult();
         if (!$bestGame) {
-            return $this->sendJsonResponse('The user has not played this text',404);
+            return $this->sendJsonResponse('The user has not played this text', 404);
         }
-        return $this->sendJsonResponse($bestGame,200);
+        return $this->sendJsonResponse($bestGame, 200);
     }
 
     // Post a new game, updates user score and user level if needed
-    public function postGameAction(Request $request) {
+    public function postGameAction(Request $request)
+    {
 
         $data = json_decode($request->getContent(), true);
         $em = $this->getDoctrine()->getManager();
@@ -215,10 +246,10 @@ class APIController extends FOSRestController
         $text = $em->getRepository('DiktaplusBundle:Text')->findOneById($data['text']);
 
         if (!$user) {
-            return $this->sendJsonResponse('No user with that ID',404);
+            return $this->sendJsonResponse('No user with that ID', 404);
         }
         if (!$text) {
-            return $this->sendJsonResponse('No text with that ID',404);
+            return $this->sendJsonResponse('No text with that ID', 404);
         }
 
         $game->setUser($user);
@@ -229,13 +260,13 @@ class APIController extends FOSRestController
         $user->setTotalScore($user->getTotalScore() + $game->getScore());
 
         //Level up formula: if (actualscore / 1000+actuallevel*200 > actual level)
-        if ($user->getTotalScore() / (1000+($user->getLevel()*100))  > $user->getLevel()) {
-            $user->setLevel($user->getLevel()+1);
+        if ($user->getTotalScore() / (1000 + ($user->getLevel() * 100)) > $user->getLevel()) {
+            $user->setLevel($user->getLevel() + 1);
             $em->flush();
-            return $this->sendJsonResponse(array("levelup" => $user->getLevel()),200);
+            return $this->sendJsonResponse(array("levelup" => $user->getLevel()), 200);
         }
         $em->flush();
-        return $this->sendJsonResponse('Game successfully uploaded and user score updated',200);
+        return $this->sendJsonResponse('Game successfully uploaded and user score updated', 200);
     }
 
 }

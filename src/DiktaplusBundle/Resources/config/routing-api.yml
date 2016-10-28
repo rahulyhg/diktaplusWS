@@ -1,7 +1,7 @@
 # ===================== USERS MANAGEMENT =======================
 
 register-user:
-    path:     /users/add
+    path:     /users/register
     defaults: { _controller: DiktaplusBundle:API:registerUser }
     methods:  POST
 
@@ -10,9 +10,9 @@ login-user:
     defaults: { _controller: DiktaplusBundle:API:loginUser }
     methods:  POST
 
-get-user:
+get-user-info:
     path:     /users/{id}
-    defaults: { _controller: DiktaplusBundle:API:getUser }
+    defaults: { _controller: DiktaplusBundle:API:getUserInfo }
     methods:  GET
 
 put-user:
