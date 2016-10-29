@@ -25,7 +25,7 @@ class APIController extends FOSRestController
     public function sendJsonResponse($data, $code)
     {
         if (gettype($data) == "string") $data = array("message" => $data);
-        if ($this->is_assoc($data)) {
+        if (gettype($data) != "array" || $this->is_assoc($data)) {
             $data2 = array();
             array_push($data2, $data);
             $data = $data2;
@@ -204,7 +204,7 @@ class APIController extends FOSRestController
     public function getTextsAction($language, $difficulty)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $dql = 'select a from DiktaplusBundle:Text a where a.language=:language and a.difficulty=:difficulty';
+        $dql = 'select a.id, a.title from DiktaplusBundle:Text a where a.language=:language and a.difficulty=:difficulty';
         $query = $em->createQuery($dql);
         $query->setParameter('language', $language);
         $query->setParameter('difficulty', $difficulty);
@@ -214,6 +214,18 @@ class APIController extends FOSRestController
             return $this->sendJsonResponse(array(array('error' => 'No texts with that language and difficulty')), 404);
         }
         return $this->sendJsonResponse($texts, 200);
+    }
+
+    // Gets the content of a text
+    public function getTextContentAction($id)
+    {
+        $repository = $this->getDoctrine()->getRepository('DiktaplusBundle:Text');
+        $text = $repository->find($id);
+
+        if (!$text) {
+            return $this->sendJsonResponse(array(array('error' => 'No text found with that ID')), 404);
+        }
+        return $this->sendJsonResponse($text, 200);
     }
 
     // Gets the best score in a game between a user and a text
