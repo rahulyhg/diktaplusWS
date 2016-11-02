@@ -69,6 +69,7 @@ class User
     private $level = 0;
 
     /**
+     * @Exclude
      * @ORM\ManyToMany(targetEntity="User", inversedBy="friends", cascade={"persist"})
      * @ORM\JoinTable(name="friendship",
      * joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
@@ -237,7 +238,14 @@ class User
      */
     public function getFriends()
     {
-        return $this->friends;
+        $res = array();
+        $subres = array();
+        foreach ($this->friends as $friend) {
+            $subres['username']= $friend->username;
+            $subres['id']= $friend->id;
+            array_push($res,$subres);
+        }
+        return $res;
     }
 
     public function addFriend($friend)
@@ -249,4 +257,5 @@ class User
     {
         $this->friends->removeElement($friend);
     }
+
 }

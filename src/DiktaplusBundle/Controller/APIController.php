@@ -97,7 +97,7 @@ class APIController extends FOSRestController
         if (!$user) {
             return $this->sendJsonResponse('No user with that ID', 404);
         }
-        return $this->sendJsonResponse(array($user), 200);
+        return $this->sendJsonResponse($user, 200);
     }
 
 
@@ -111,10 +111,12 @@ class APIController extends FOSRestController
         if (!$user) {
             return $this->sendJsonResponse('No user with that ID', 404);
         }
-        $user->setUsername($data['username']);
+        if ($user->getPassword()!= $data['old_password']) {
+            return $this->sendJsonResponse('Wrong password', 403);
+        }
         $user->setEmail($data['email']);
         $user->setCountry($data['country']);
-        $user->setPassword($data['password']);
+        if ($data['password']!='') $user->setPassword($data['password']);
 
         $em->flush();
         return $this->sendJsonResponse(array('message' => 'User successfully modified'), 200);
@@ -134,7 +136,7 @@ class APIController extends FOSRestController
         }
         $em->remove($user);
         $em->flush();
-        return $this->sendJsonResponse(array('message' => 'User and his games were deleted'), 200);
+        return $this->sendJsonResponse('User and his games were deleted', 200);
     }
 
     // Gets a list of cnt users filtered by country
@@ -168,33 +170,47 @@ class APIController extends FOSRestController
         return $this->sendJsonResponse($results, 200);
     }
 
+    // Get the friends of a user
+    public function getFriendsAction($id1)
+    {
+        $em = $this->getDoctrine()->getManager();
+        $user = $em->getRepository('DiktaplusBundle:User')->findOneById($id1);
+
+        if (!$user) {
+            return $this->sendJsonResponse('No user with that ID', 404);
+        }
+        return $this->sendJsonResponse($user->getFriends(), 200);
+    }
+
     // Set a user as a friend of another user
-    public function makeFriendsAction($id1, $id2)
+    public function makeFriendsAction($id1, $username)
     {
         $em = $this->getDoctrine()->getManager();
         $user1 = $em->getRepository('DiktaplusBundle:User')->findOneById($id1);
-        $user2 = $em->getRepository('DiktaplusBundle:User')->findOneById($id2);
+        $user2 = $em->getRepository('DiktaplusBundle:User')->findOneBy(array('username' => $username));
 
         if (!$user1 || !$user2) {
             return $this->sendJsonResponse('No user with that ID', 404);
         }
         $user1->addFriend($user2);
+        $user2->addFriend($user1);
 
         $em->flush();
-        return $this->sendJsonResponse('Friendship created', 201);
+        return $this->sendJsonResponse('Friendship created', 200);
     }
 
     // Set a user as a friend of another user
-    public function deleteFriendsAction($id1, $id2)
+    public function deleteFriendsAction($id1, $username)
     {
         $em = $this->getDoctrine()->getManager();
         $user1 = $em->getRepository('DiktaplusBundle:User')->findOneById($id1);
-        $user2 = $em->getRepository('DiktaplusBundle:User')->findOneById($id2);
+        $user2 = $em->getRepository('DiktaplusBundle:User')->findOneBy(array('username' => $username));
 
         if (!$user1 || !$user2) {
             return $this->sendJsonResponse('No user with that ID', 404);
         }
         $user1->deleteFriend($user2);
+        $user2->deleteFriend($user1);
 
         $em->flush();
         return $this->sendJsonResponse('Friendship deleted', 200);
