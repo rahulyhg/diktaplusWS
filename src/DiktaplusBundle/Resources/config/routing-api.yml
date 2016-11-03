@@ -65,6 +65,7 @@ get-text-content:
     methods:  GET
 
 # ===================== GAMES MANAGEMENT =======================
+
 post-game:
     path:     /games/add
     defaults: { _controller: DiktaplusBundle:API:postGame }

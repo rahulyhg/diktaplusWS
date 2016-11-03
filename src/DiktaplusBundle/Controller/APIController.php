@@ -3,14 +3,10 @@
 namespace DiktaplusBundle\Controller;
 
 use DiktaplusBundle\Entity\Game;
-use FOS\RestBundle\Controller\FOSRestController;
 use DiktaplusBundle\Entity\User;
-use DiktaplusBundle\Entity\Text;
-use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
+use FOS\RestBundle\Controller\FOSRestController;
 use FOS\RestBundle\View\View;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Method;
+use Symfony\Component\HttpFoundation\Request;
 
 class APIController extends FOSRestController
 {
@@ -79,10 +75,10 @@ class APIController extends FOSRestController
             $user = $repository->findOneBy(array('email' => $data['email']));
         }
         if (!$user) {
-            return $this->sendJsonResponse('No user founded', 404);
+            return $this->sendJsonResponse('No user found', 404);
         }
         if ($user->getPassword() == $data['password']) {
-            return $this->sendJsonResponse(array($user), 200);
+            return $this->sendJsonResponse($user, 200);
         }
 
         return $this->sendJsonResponse('Incorrect password', 403);
@@ -111,18 +107,18 @@ class APIController extends FOSRestController
         if (!$user) {
             return $this->sendJsonResponse('No user with that ID', 404);
         }
-        if ($user->getPassword()!= $data['old_password']) {
+        if ($user->getPassword() != $data['old_password']) {
             return $this->sendJsonResponse('Wrong password', 403);
         }
         $user->setEmail($data['email']);
         $user->setCountry($data['country']);
-        if ($data['password']!='') $user->setPassword($data['password']);
+        if ($data['password'] != '') $user->setPassword($data['password']);
 
         $em->flush();
-        return $this->sendJsonResponse(array('message' => 'User successfully modified'), 200);
+        return $this->sendJsonResponse('User successfully modified', 200);
     }
 
-    // Deletes the user with ID, and the games he has played
+    // Deletes the user with ID, and the games he has played, (also his friendships)
     public function deleteUserAction($id)
     {
         $em = $this->getDoctrine()->getManager();
@@ -136,21 +132,22 @@ class APIController extends FOSRestController
         }
         $em->remove($user);
         $em->flush();
-        return $this->sendJsonResponse('User and his games were deleted', 200);
+        return $this->sendJsonResponse('User, his friends and his games were deleted', 200);
     }
 
     // Gets a list of cnt users filtered by country
     public function getRankingAction($country, $cnt)
     {
         $em = $this->getDoctrine()->getEntityManager();
-        $dql = 'select a from DiktaplusBundle:User a where a.country=:country order by a.totalScore desc';
+        if ($country != 'world') $dql = 'select a from DiktaplusBundle:User a where a.country=:country order by a.totalScore desc';
+        else $dql = 'select a from DiktaplusBundle:User a order by a.totalScore desc';
         $query = $em->createQuery($dql);
-        $query->setParameter('country', $country);
+        if ($country != 'world') $query->setParameter('country', $country);
         $query->setMaxResults($cnt);
         $ranking = $query->getResult();
 
         if (!$ranking) {
-            return $this->sendJsonResponse('No rannking for that country', 404);
+            return $this->sendJsonResponse('No ranking for that country', 404);
         }
         return $this->sendJsonResponse($ranking, 200);
     }
@@ -226,9 +223,7 @@ class APIController extends FOSRestController
         $query->setParameter('difficulty', $difficulty);
         $texts = $query->getResult();
 
-        if (!$texts) {
-            return $this->sendJsonResponse(array(array('error' => 'No texts with that language and difficulty')), 404);
-        }
+        if (!$texts) return $this->sendJsonResponse('No texts with that language and difficulty', 404);
         return $this->sendJsonResponse($texts, 200);
     }
 
@@ -237,29 +232,8 @@ class APIController extends FOSRestController
     {
         $repository = $this->getDoctrine()->getRepository('DiktaplusBundle:Text');
         $text = $repository->find($id);
-
-        if (!$text) {
-            return $this->sendJsonResponse(array(array('error' => 'No text found with that ID')), 404);
-        }
+        if (!$text) return $this->sendJsonResponse('No text found with that ID', 404);
         return $this->sendJsonResponse($text, 200);
-    }
-
-    // Gets the best score in a game between a user and a text
-    public function getBestScoreAction($user, $text)
-    {
-
-        $em = $this->getDoctrine()->getEntityManager();
-        $dql = 'select a.id,a.score from DiktaplusBundle:Game a where a.text=:text and a.user=:user order by a.score desc';
-        $query = $em->createQuery($dql);
-
-        $query->setParameter('text', $text);
-        $query->setParameter('user', $user);
-        $query->setMaxResults(1);
-        $bestGame = $query->getResult();
-        if (!$bestGame) {
-            return $this->sendJsonResponse('The user has not played this text', 404);
-        }
-        return $this->sendJsonResponse($bestGame, 200);
     }
 
     // Post a new game, updates user score and user level if needed
@@ -297,4 +271,21 @@ class APIController extends FOSRestController
         return $this->sendJsonResponse('Game successfully uploaded and user score updated', 200);
     }
 
+    // Gets the best score in a game between a user and a text
+    public function getBestScoreAction($user, $text)
+    {
+
+        $em = $this->getDoctrine()->getEntityManager();
+        $dql = 'select a.id,a.score from DiktaplusBundle:Game a where a.text=:text and a.user=:user order by a.score desc';
+        $query = $em->createQuery($dql);
+
+        $query->setParameter('text', $text);
+        $query->setParameter('user', $user);
+        $query->setMaxResults(1);
+        $bestGame = $query->getResult();
+        if (!$bestGame) {
+            return $this->sendJsonResponse('The user has not played this text', 404);
+        }
+        return $this->sendJsonResponse($bestGame, 200);
+    }
 }
