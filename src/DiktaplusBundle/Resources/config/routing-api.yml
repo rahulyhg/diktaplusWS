@@ -1,0 +1,79 @@
+# ===================== USERS MANAGEMENT =======================
+
+register-user:
+    path:     /users/register
+    defaults: { _controller: DiktaplusBundle:API:registerUser }
+    methods:  POST
+
+login-user:
+    path:     /users/login
+    defaults: { _controller: DiktaplusBundle:API:loginUser }
+    methods:  POST
+
+get-user-info:
+    path:     /users/{id}
+    defaults: { _controller: DiktaplusBundle:API:getUserInfo }
+    methods:  GET
+
+put-user:
+    path:     /users/{id}
+    defaults: { _controller: DiktaplusBundle:API:putUser }
+    methods:  PUT
+
+delete-user:
+    path:     /users/{id}
+    defaults: { _controller: DiktaplusBundle:API:deleteUser }
+    methods:  DELETE
+
+get-ranking:
+    path:     /users/ranking/{country}/{cnt}
+    defaults: { _controller: DiktaplusBundle:API:getRanking }
+    methods:  GET
+
+get-users-by-username:
+    path:     /users/like/{username}
+    defaults: { _controller: DiktaplusBundle:API:getUsersByUsername }
+    methods:  GET
+
+# ===================== FRIENDS MANAGEMENT =======================
+
+get-friends:
+    path:     /users/friends/{id1}
+    defaults: { _controller: DiktaplusBundle:API:getFriends }
+    methods:  GET
+
+make-friends:
+    path:     /users/friends/{id1}/{username}
+    defaults: { _controller: DiktaplusBundle:API:makeFriends }
+    methods:  PUT
+
+delete-friends:
+    path:     /users/friends/{id1}/{username}
+    defaults: { _controller: DiktaplusBundle:API:deleteFriends }
+    methods:  DELETE
+
+# ===================== TEXTS MANAGEMENT =======================
+
+get-texts:
+    path:     /texts/{language}/{difficulty}
+    defaults: { _controller: DiktaplusBundle:API:getTexts }
+    methods:  GET
+
+get-text-content:
+    path:     /texts/{id}
+    defaults: { _controller: DiktaplusBundle:API:getTextContent }
+    methods:  GET
+
+# ===================== GAMES MANAGEMENT =======================
+
+post-game:
+    path:     /games/add
+    defaults: { _controller: DiktaplusBundle:API:postGame }
+    methods:  POST
+
+get-best-score:
+    path:     /games/{user}/{text}
+    defaults: { _controller: DiktaplusBundle:API:getBestScore }
+    methods:  GET
+
+
