@@ -13,11 +13,14 @@ use Symfony\Component\Security\Core\SecurityContext;
 class SecurityController extends Controller
 {
     private $session;
-    public function __construct() {
+
+    public function __construct()
+    {
         $this->session = new Session();
     }
 
-    public function signupAction(Request $request) {
+    public function signupAction(Request $request)
+    {
         $admin_user = new Admin();
         $form = $this->createForm(new SignupType(), $admin_user);
         $form->handleRequest($request);
@@ -38,11 +41,12 @@ class SecurityController extends Controller
 
         }
         return $this->render('DiktaplusBundle:Default:form.html.twig',
-            array('form' => $form->createView(),'form_title' => "Sign up a new administrator"));
+            array('form' => $form->createView(), 'form_title' => "Sign up a new administrator"));
     }
 
 
-    public function loginAction(Request $request){
+    public function loginAction(Request $request)
+    {
         $authenticationUtils = $this->get('security.authentication_utils');
         $error = $authenticationUtils->getLastAuthenticationError();
 
@@ -50,8 +54,8 @@ class SecurityController extends Controller
         if (!$error && $securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $this->session->getFlashBag()->add('info', 'Login done');
             return $this->redirect($this->generateURL('welcome'));
-        } else if ($error){
-            $this->session->getFlashBag()->add('info', 'Check email and password');
+        } else if ($error) {
+            $this->session->getFlashBag()->add('info', "Error".$error);
             return $this->render('DiktaplusBundle:Default:login.html.twig');
         } else {
             return $this->render('DiktaplusBundle:Default:login.html.twig');

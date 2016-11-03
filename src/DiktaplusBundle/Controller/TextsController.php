@@ -64,14 +64,18 @@ class TextsController extends Controller
             array('form' => $form->createView(),'form_title' => "Edit text ".$id));
     }
 
-    public function deleteTextAction($id, Request $request) {
-
+    public function deleteTextAction($id) {
         $em = $this->getDoctrine()->getManager();
         $text = $em->getRepository('DiktaplusBundle:Text')->find($id);
         if (!$text) {
             throw $this->createNotFoundException(
                 'No text found for id ' . $id
             );
+        }
+        // Remove the games from the database with this text
+        $games = $em->getRepository('DiktaplusBundle:Game')->findBy(array('text' => $id));
+        foreach ($games as $game) {
+            $em->remove($game);
         }
         $em->remove($text);
         $em->flush();

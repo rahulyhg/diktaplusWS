@@ -4,6 +4,8 @@ namespace DiktaplusBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\Common\Collections\ArrayCollection;
+use JMS\Serializer\Annotation\ExclusionPolicy;
+use JMS\Serializer\Annotation\Exclude;
 
 
 /**
@@ -39,6 +41,7 @@ class User
 
     /**
      * @var string
+     * @Exclude
      *
      * @ORM\Column(name="password", type="string", length=255)
      */
@@ -66,8 +69,12 @@ class User
     private $level = 0;
 
     /**
-     * @ORM\ManyToOne(targetEntity="User", inversedBy="friends")
-     * @ORM\JoinColumn(name="user_id", referencedColumnName="id")
+     * @Exclude
+     * @ORM\ManyToMany(targetEntity="User", inversedBy="friends", cascade={"persist"})
+     * @ORM\JoinTable(name="friendship",
+     * joinColumns={@ORM\JoinColumn(name="user_id", referencedColumnName="id")},
+     * inverseJoinColumns={@ORM\JoinColumn(name="user2_id", referencedColumnName="id")}
+     * )
      */
     private $friends;
 
@@ -220,4 +227,35 @@ class User
     {
         return $this->level;
     }
+
+
+    public function __toString() {
+        return $this->getUsername();
+    }
+
+    /**
+     * @return mixed
+     */
+    public function getFriends()
+    {
+        $res = array();
+        $subres = array();
+        foreach ($this->friends as $friend) {
+            $subres['username']= $friend->username;
+            $subres['id']= $friend->id;
+            array_push($res,$subres);
+        }
+        return $res;
+    }
+
+    public function addFriend($friend)
+    {
+        $this->friends->add($friend);
+    }
+
+    public function deleteFriend($friend)
+    {
+        $this->friends->removeElement($friend);
+    }
+
 }

@@ -6,6 +6,9 @@ welcome:
     path:     /welcome
     defaults: { _controller: DiktaplusBundle:Default:welcome }
 
+
+#============================== TEXTS MANAGEMENT ============================
+
 texts:
     path:     /texts
     defaults: { _controller: DiktaplusBundle:Texts:texts }
@@ -22,6 +25,9 @@ texts_delete:
     path:     /textsdelete{id}
     defaults: { _controller: DiktaplusBundle:Texts:deleteText }
 
+
+#============================== USERS MANAGEMENT ============================
+
 users:
     path:     /users
     defaults: { _controller: DiktaplusBundle:Users:users }
@@ -37,6 +43,8 @@ users_edit:
 users_delete:
     path:     /usersdelete{id}
     defaults: { _controller: DiktaplusBundle:Users:deleteUser }
+
+#============================== SECURITY ============================
 
 signup:
     pattern:  /signup
