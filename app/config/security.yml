@@ -14,13 +14,25 @@ security:
             logout:
                 path: /logout
                 target: /
- 
+
+        oauth_token:
+            pattern:  ^/oauth/v2/token
+            security: false
+
+        secured_area:
+            pattern:    ^/api
+            fos_oauth:  true
+            stateless:  true
+
     providers:
         admins:
             entity: { class: DiktaplusBundle\Entity\Admin, property: email }
-     
+        in_memory:
+            memory: ~
+
     access_control:
         - { path: ^/signup, roles: IS_AUTHENTICATED_ANONYMOUSLY}
+        - { path: ^/api, roles: [ IS_AUTHENTICATED_FULLY ] }
      
     encoders:
         DiktaplusBundle\Entity\Admin: { algorithm: sha512, iterations: 10 }

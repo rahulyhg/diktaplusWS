@@ -6,24 +6,25 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Doctrine\ORM\EntityRepository;
 
-class SignupType extends AbstractType {
+class SignupType extends AbstractType
+{
 
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
         $builder->add('email', 'email', array("label" => "Email: ",
-                "required" => true,
-                "attr" => array('class' => 'form-control')))
-
+            "required" => true,
+            "attr" => array('class' => 'form-control')))
             ->add('password', 'repeated', array(
                 'type' => 'password',
                 'invalid_message' => 'Passwords do not match',
                 'required' => true,
-                'first_options' => array('label' => 'Password: ',"attr" => array('class' => 'form-control')),
-                'second_options' => array('label' => 'Repeat password: ',"attr" => array('class' => 'form-control'))))
-
-            ->add('Submit', 'submit',array("attr" => array('class' => 'btn btn-success', 'style' => 'margin-top:15px;')));
+                'first_options' => array('label' => 'Password: ', "attr" => array('class' => 'form-control')),
+                'second_options' => array('label' => 'Repeat password: ', "attr" => array('class' => 'form-control'))))
+            ->add('Submit', 'submit', array("attr" => array('class' => 'btn btn-success', 'style' => 'margin-top:15px;')));
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'Signup';
     }
 

@@ -55,7 +55,7 @@ class SecurityController extends Controller
             $this->session->getFlashBag()->add('info', 'Login done');
             return $this->redirect($this->generateURL('welcome'));
         } else if ($error) {
-            $this->session->getFlashBag()->add('info', "Error".$error);
+            $this->session->getFlashBag()->add('info', "Check your credentials");
             return $this->render('DiktaplusBundle:Default:login.html.twig');
         } else {
             return $this->render('DiktaplusBundle:Default:login.html.twig');

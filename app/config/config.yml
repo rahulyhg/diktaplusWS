@@ -72,3 +72,13 @@ fos_rest:
         rules:
             - { path: '^/api/', priorities: ['json', 'xml'], fallback_format: 'html' }
             - { path: '^/', stop : true }
+
+fos_oauth_server:
+    db_driver:           orm
+    client_class:        DiktaplusBundle\Entity\Client
+    access_token_class:  DiktaplusBundle\Entity\AccessToken
+    refresh_token_class: FOS\OAuthServerBundle\Entity\RefreshToken
+    auth_code_class:     FOS\OAuthServerBundle\Entity\AuthCode
+    service:
+        options:
+            access_token_lifetime: 3600

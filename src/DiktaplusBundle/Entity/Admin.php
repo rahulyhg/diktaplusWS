@@ -40,7 +40,7 @@ class Admin implements UserInterface
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -63,7 +63,7 @@ class Admin implements UserInterface
     /**
      * Get email
      *
-     * @return string 
+     * @return string
      */
     public function getEmail()
     {
@@ -86,7 +86,7 @@ class Admin implements UserInterface
     /**
      * Get password
      *
-     * @return string 
+     * @return string
      */
     public function getPassword()
     {
@@ -97,20 +97,24 @@ class Admin implements UserInterface
     {
         return array('ROLE_ADMIN');
     }
+
     public function getSalt()
     {
         return false;
     }
+
     public function getUsername()
     {
         return $this->getEmail();
     }
+
     public function eraseCredentials()
     {
         return false;
     }
 
-    public function __toString(){
+    public function __toString()
+    {
         return $this->getUsername();
     }
 }

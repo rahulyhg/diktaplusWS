@@ -1,5 +1,3 @@
-
-
 diktaplus:
     resource: "@DiktaplusBundle/Resources/config/routing.yml"
     prefix:   /
@@ -8,8 +6,5 @@ api:
     resource: "@DiktaplusBundle/Resources/config/routing-api.yml"
     prefix:   /api/
 
-
-app:
-    resource: "@AppBundle/Controller/"
-    type:     annotation
-
+fos_oauth_server_token:
+    resource: "@FOSOAuthServerBundle/Resources/config/routing/token.xml"

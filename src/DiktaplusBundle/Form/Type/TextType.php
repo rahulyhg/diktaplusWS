@@ -8,9 +8,11 @@ use Symfony\Component\Form\Extension\Core\Type\LanguageType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
 use Symfony\Component\Form\FormBuilderInterface;
 
-class TextType extends AbstractType {
+class TextType extends AbstractType
+{
 
-    public function buildForm(FormBuilderInterface $builder, array $options) {
+    public function buildForm(FormBuilderInterface $builder, array $options)
+    {
 
         $builder->add('language', LanguageType::class, array(
             'required' => true,
@@ -18,7 +20,7 @@ class TextType extends AbstractType {
         ));
 
         $builder->add('difficulty', ChoiceType::class, array(
-            'choices'  => array(
+            'choices' => array(
                 'Easy' => 'Easy',
                 'Medium' => 'Medium',
                 'Hard' => 'Hard',
@@ -38,10 +40,11 @@ class TextType extends AbstractType {
             'required' => 'true',
         ));
 
-        $builder->add('Submit', 'submit',array("attr" => array('class' => 'btn btn-success', 'style' => 'margin-top:20px;')));
+        $builder->add('Submit', 'submit', array("attr" => array('class' => 'btn btn-success', 'style' => 'margin-top:20px;')));
     }
 
-    public function getName() {
+    public function getName()
+    {
         return 'AddText';
     }
 
