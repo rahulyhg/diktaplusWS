@@ -1,7 +1,7 @@
 security:
     firewalls:
         dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            pattern: ^/dai/(_(profiler|wdt)|css|images|js)/
             security: false
 
         auth:
@@ -45,7 +45,7 @@ security:
             memory: ~
 
     access_control:
-        - { path: ^/, role: IS_AUTHENTICATED_ANONYMOUSLY }
+        - { path: ^/dai, role: IS_AUTHENTICATED_ANONYMOUSLY }
         - { path: ^/api, role: IS_AUTHENTICATED_FULLY }
      
     encoders:

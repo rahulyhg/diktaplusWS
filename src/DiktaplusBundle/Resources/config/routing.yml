@@ -14,15 +14,15 @@ texts:
     defaults: { _controller: DiktaplusBundle:Texts:texts }
 
 texts_add:
-    path:     /textsadd
+    path:     /texts/add
     defaults: { _controller: DiktaplusBundle:Texts:addText }
 
 texts_edit:
-    path:     /textsedit{id}
+    path:     /texts/edit/{id}
     defaults: { _controller: DiktaplusBundle:Texts:editText }
 
 texts_delete:
-    path:     /textsdelete{id}
+    path:     /texts/delete/{id}
     defaults: { _controller: DiktaplusBundle:Texts:deleteText }
 
 
@@ -33,15 +33,15 @@ users:
     defaults: { _controller: DiktaplusBundle:Users:users }
 
 users_add:
-    path:     /usersadd
+    path:     /users/add
     defaults: { _controller: DiktaplusBundle:Users:addUser }
 
 users_edit:
-    path:     /usersedit{id}
+    path:     /users/edit/{id}
     defaults: { _controller: DiktaplusBundle:Users:editUser }
 
 users_delete:
-    path:     /usersdelete{id}
+    path:     /users/delete/{id}
     defaults: { _controller: DiktaplusBundle:Users:deleteUser }
 
 #============================== SECURITY ============================
