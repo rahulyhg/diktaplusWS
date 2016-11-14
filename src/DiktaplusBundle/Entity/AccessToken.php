@@ -22,4 +22,5 @@ class AccessToken extends BaseAccessToken
      */
     protected $client;
 }
+
 ?>

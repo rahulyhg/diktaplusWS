@@ -53,7 +53,7 @@ class Text
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -76,7 +76,7 @@ class Text
     /**
      * Get language
      *
-     * @return string 
+     * @return string
      */
     public function getLanguage()
     {
@@ -99,7 +99,7 @@ class Text
     /**
      * Get difficulty
      *
-     * @return string 
+     * @return string
      */
     public function getDifficulty()
     {
@@ -122,7 +122,7 @@ class Text
     /**
      * Get content
      *
-     * @return string 
+     * @return string
      */
     public function getContent()
     {

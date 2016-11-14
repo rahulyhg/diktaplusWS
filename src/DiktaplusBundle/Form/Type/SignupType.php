@@ -4,7 +4,6 @@ namespace DiktaplusBundle\Form\Type;
 
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
-use Doctrine\ORM\EntityRepository;
 
 class SignupType extends AbstractType
 {

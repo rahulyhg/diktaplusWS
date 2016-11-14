@@ -2,18 +2,19 @@
 
 namespace DiktaplusBundle\Controller;
 
+use DiktaplusBundle\Entity\Text;
 use DiktaplusBundle\Form\Type\TextType;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
-use DiktaplusBundle\Entity\Text;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpFoundation\Session\Session;
 
 
 class TextsController extends Controller
 {
     private $session;
-    public function __construct() {
+
+    public function __construct()
+    {
         $this->session = new Session();
     }
 
@@ -22,10 +23,11 @@ class TextsController extends Controller
         $repository = $this->getDoctrine()
             ->getRepository('DiktaplusBundle:Text');
         $texts = $repository->findAll();
-        return $this->render('DiktaplusBundle:Default:texts.html.twig',array('texts' => $texts));
+        return $this->render('DiktaplusBundle:Default:texts.html.twig', array('texts' => $texts));
     }
 
-    public function addTextAction(Request $request) {
+    public function addTextAction(Request $request)
+    {
         $text = new Text();
         $form = $this->createForm(new TextType(), $text);
         $form->handleRequest($request);
@@ -39,10 +41,11 @@ class TextsController extends Controller
         }
 
         return $this->render('DiktaplusBundle:Default:form.html.twig',
-            array('form' => $form->createView(),'form_title' => "Add a new text"));
+            array('form' => $form->createView(), 'form_title' => "Add a new text"));
     }
 
-    public function editTextAction($id, Request $request) {
+    public function editTextAction($id, Request $request)
+    {
 
         $em = $this->getDoctrine()->getManager();
         $text = $em->getRepository('DiktaplusBundle:Text')->find($id);
@@ -61,10 +64,11 @@ class TextsController extends Controller
             return $this->redirect($this->generateURL('texts'));
         }
         return $this->render('DiktaplusBundle:Default:form.html.twig',
-            array('form' => $form->createView(),'form_title' => "Edit text ".$id));
+            array('form' => $form->createView(), 'form_title' => "Edit text " . $id));
     }
 
-    public function deleteTextAction($id) {
+    public function deleteTextAction($id)
+    {
         $em = $this->getDoctrine()->getManager();
         $text = $em->getRepository('DiktaplusBundle:Text')->find($id);
         if (!$text) {
@@ -84,7 +88,7 @@ class TextsController extends Controller
         $repository = $this->getDoctrine()
             ->getRepository('DiktaplusBundle:Text');
         $texts = $repository->findAll();
-        return $this->render('DiktaplusBundle:Default:texts.html.twig',array('texts' => $texts));
+        return $this->render('DiktaplusBundle:Default:texts.html.twig', array('texts' => $texts));
     }
 
 

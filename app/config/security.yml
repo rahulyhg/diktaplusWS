@@ -20,7 +20,7 @@ security:
             security: false
 
         secured_area:
-            pattern:    ^/api
+            pattern:    ^/
             fos_oauth:  true
             stateless:  true
 

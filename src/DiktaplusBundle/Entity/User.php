@@ -3,9 +3,6 @@
 namespace DiktaplusBundle\Entity;
 
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\Common\Collections\ArrayCollection;
-use JMS\Serializer\Annotation\ExclusionPolicy;
-use JMS\Serializer\Annotation\Exclude;
 
 
 /**
@@ -79,11 +76,10 @@ class User
     private $friends;
 
 
-
     /**
      * Get id
      *
-     * @return integer 
+     * @return integer
      */
     public function getId()
     {
@@ -106,7 +102,7 @@ class User
     /**
      * Get email
      *
-     * @return string 
+     * @return string
      */
     public function getEmail()
     {
@@ -129,7 +125,7 @@ class User
     /**
      * Get username
      *
-     * @return string 
+     * @return string
      */
     public function getUsername()
     {
@@ -152,7 +148,7 @@ class User
     /**
      * Get password
      *
-     * @return string 
+     * @return string
      */
     public function getPassword()
     {
@@ -175,7 +171,7 @@ class User
     /**
      * Get country
      *
-     * @return string 
+     * @return string
      */
     public function getCountry()
     {
@@ -198,7 +194,7 @@ class User
     /**
      * Get totalScore
      *
-     * @return integer 
+     * @return integer
      */
     public function getTotalScore()
     {
@@ -221,7 +217,7 @@ class User
     /**
      * Get level
      *
-     * @return integer 
+     * @return integer
      */
     public function getLevel()
     {
@@ -229,7 +225,8 @@ class User
     }
 
 
-    public function __toString() {
+    public function __toString()
+    {
         return $this->getUsername();
     }
 
@@ -241,9 +238,9 @@ class User
         $res = array();
         $subres = array();
         foreach ($this->friends as $friend) {
-            $subres['username']= $friend->username;
-            $subres['id']= $friend->id;
-            array_push($res,$subres);
+            $subres['username'] = $friend->username;
+            $subres['id'] = $friend->id;
+            array_push($res, $subres);
         }
         return $res;
     }
