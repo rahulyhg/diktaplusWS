@@ -32,6 +32,14 @@ class UsersController extends Controller
         $form = $this->createForm(new UserType(), $user);
         $form->handleRequest($request);
 
+
+        if ($form->isSubmitted()) {
+            $email = $form->get('email')->getData();
+            $password = $this->get('security.encoder_factory')->getEncoder($user)->encodePassword($form->get('password')->getData(), $user->getSalt());
+            $user->setEmail($email);
+            $user->setPassword($password);
+        }
+
         if ($form->isValid()) {
             $em = $this->getDoctrine()->getManager();
             $em->persist($user);

@@ -1,3 +1,7 @@
 parameters:
 
 services:
+    diktaplus.user_provider:
+        class: DiktaplusBundle\Security\UserProvider
+        arguments:
+            entityManager: "@doctrine.orm.entity_manager"

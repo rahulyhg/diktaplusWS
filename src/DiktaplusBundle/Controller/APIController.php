@@ -84,7 +84,6 @@ class APIController extends FOSRestController
         return $this->sendJsonResponse('Incorrect password', 403);
     }
 
-
     // Gets the user info with ID
     public function getUserInfoAction($id)
     {
@@ -95,7 +94,6 @@ class APIController extends FOSRestController
         }
         return $this->sendJsonResponse($user, 200);
     }
-
 
     // Updates the user with ID with params in json object
     public function putUserAction(Request $request, $id)

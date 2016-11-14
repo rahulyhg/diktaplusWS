@@ -110,6 +110,8 @@ class Admin implements UserInterface
 
     public function eraseCredentials()
     {
+        $this->setPassword('');
+        $this->setEmail('');
         return false;
     }
 
