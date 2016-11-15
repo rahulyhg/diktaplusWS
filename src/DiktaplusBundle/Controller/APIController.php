@@ -54,7 +54,9 @@ class APIController extends FOSRestController
         $user->setUsername($data['username']);
         $user->setEmail($data['email']);
         $user->setCountry($data['country']);
-        $user->setPassword($data['password']);
+        $password = $this->get('security.encoder_factory')->getEncoder($user)->encodePassword($data['password']
+            , $user->getSalt());
+        $user->setPassword($password);
 
         $em = $this->getDoctrine()->getManager();
         $em->persist($user);
@@ -77,11 +79,7 @@ class APIController extends FOSRestController
         if (!$user) {
             return $this->sendJsonResponse('No user found', 404);
         }
-        if ($user->getPassword() == $data['password']) {
-            return $this->sendJsonResponse($user, 200);
-        }
-
-        return $this->sendJsonResponse('Incorrect password', 403);
+        return $this->sendJsonResponse($user, 200);
     }
 
     // Gets the user info with ID
@@ -105,12 +103,13 @@ class APIController extends FOSRestController
         if (!$user) {
             return $this->sendJsonResponse('No user with that ID', 404);
         }
-        if ($user->getPassword() != $data['old_password']) {
-            return $this->sendJsonResponse('Wrong password', 403);
-        }
         $user->setEmail($data['email']);
         $user->setCountry($data['country']);
-        if ($data['password'] != '') $user->setPassword($data['password']);
+        if ($data['password'] != '') {
+            $password = $this->get('security.encoder_factory')->getEncoder($user)->encodePassword($data['password']
+                , $user->getSalt());
+            $user->setPassword($password);
+        }
 
         $em->flush();
         return $this->sendJsonResponse('User successfully modified', 200);
