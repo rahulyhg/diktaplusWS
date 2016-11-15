@@ -103,9 +103,9 @@ class APIController extends FOSRestController
         if (!$user) {
             return $this->sendJsonResponse('No user with that ID', 404);
         }
-        $user->setEmail($data['email']);
-        $user->setCountry($data['country']);
-        if ($data['password'] != '') {
+        if ($data['email'] && $data['email'] != '') $user->setEmail($data['email']);
+        if ($data['country'] && $data['country'] != '') $user->setCountry($data['country']);
+        if ($data['password'] && $data['password'] != '') {
             $password = $this->get('security.encoder_factory')->getEncoder($user)->encodePassword($data['password']
                 , $user->getSalt());
             $user->setPassword($password);
@@ -126,6 +126,10 @@ class APIController extends FOSRestController
         $games = $em->getRepository('DiktaplusBundle:Game')->findBy(array('user' => $id));
         foreach ($games as $game) {
             $em->remove($game);
+        }
+        $tokens = $em->getRepository('DiktaplusBundle:RefreshToken')->findBy(array('user' => $id));
+        foreach ($tokens as $token) {
+            $em->remove($token);
         }
         $em->remove($user);
         $em->flush();
