@@ -7,7 +7,7 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>{% block title %}DiktaPlus Admin Inteface{% endblock %}</title>
+    <title>{% block title %}DAI{% endblock %}</title>
 
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
@@ -15,7 +15,7 @@
 
 <body>
 <div class="container" style="width: 40%; background: cornflowerblue; padding: 15px;">
-    <h1>DictaPlus Admin Interface</h1>
+    <h1>DiktaPlus Admin Interface</h1>
     <h3>Log in</h3>
     {% for message in app.session.flashbag().get('info') %}<div class="text-danger">{{ message }}</div>{% endfor %}
     <form action="{{ path('login_check') }}" method="post">
