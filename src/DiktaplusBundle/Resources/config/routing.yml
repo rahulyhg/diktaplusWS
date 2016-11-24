@@ -2,10 +2,6 @@ home:
     path:     /
     defaults: { _controller: DiktaplusBundle:Security:login }
 
-welcome:
-    path:     /welcome
-    defaults: { _controller: DiktaplusBundle:Default:welcome }
-
 
 #============================== TEXTS MANAGEMENT ============================
 

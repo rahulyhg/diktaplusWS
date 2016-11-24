@@ -26,7 +26,7 @@ class SecurityController extends Controller
         $securityContext = $this->container->get('security.authorization_checker');
         if (!$error && $securityContext->isGranted('IS_AUTHENTICATED_REMEMBERED')) {
             $this->session->getFlashBag()->add('info', 'Login done');
-            return $this->redirect($this->generateURL('welcome'));
+            return $this->redirect($this->generateURL('texts'));
         } else if ($error) {
             $this->session->getFlashBag()->add('info', "Check your credentials");
             return $this->render('DiktaplusBundle:Default:login.html.twig');
