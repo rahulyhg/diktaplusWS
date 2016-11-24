@@ -13,7 +13,7 @@ security:
                 check_path: /dai/login_check
             logout:
                 path: /dai/logout
-                target: /dai
+                target: /dai/
 
         oauth_authorize:
             pattern:    ^/oauth/v2/auth

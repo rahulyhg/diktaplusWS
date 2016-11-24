@@ -1,4 +1,4 @@
-diktaplus:
+dai:
     resource: "@DiktaplusBundle/Resources/config/routing.yml"
     prefix:   /dai/
 

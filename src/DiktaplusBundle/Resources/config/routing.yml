@@ -46,10 +46,6 @@ users_delete:
 
 #============================== SECURITY ============================
 
-signup:
-    pattern:  /signup
-    defaults: { _controller: DiktaplusBundle:Security:signup }
-
 login:
     pattern: /login
     defaults: { _controller: DiktaplusBundle:Security:login }
