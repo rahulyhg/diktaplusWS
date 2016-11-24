@@ -1,19 +1,19 @@
 security:
     firewalls:
         dev:
-            pattern: ^/(_(profiler|wdt)|css|images|js)/
+            pattern: ^/dai/(_(profiler|wdt)|css|images|js)/
             security: false
 
         auth:
-            pattern: ^/
+            pattern: ^/dai
             anonymous: ~
             provider: admins
             form_login:
-                login_path: /login
-                check_path: /login_check
+                login_path: /dai/login
+                check_path: /dai/login_check
             logout:
-                path: /logout
-                target: /
+                path: /dai/logout
+                target: /dai
 
         oauth_authorize:
             pattern:    ^/oauth/v2/auth
