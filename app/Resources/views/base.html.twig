@@ -7,39 +7,50 @@
     <meta name="description" content="">
     <meta name="author" content="">
 
-    <title>
-        {% block title %}DiktaPlus Admin Inteface{% endblock %}
-    </title>
+    <title>DiktaPlus Admin Inteface</title>
 
     <link rel="icon" type="image/x-icon" href="{{ asset('favicon.ico') }}"/>
     <link href="{{ asset('css/bootstrap.min.css') }}" rel="stylesheet">
-    <link href="{{ asset('css/simple-sidebar.css') }}" rel="stylesheet">
     <link href="{{ asset('css/styles.css') }}" rel="stylesheet">
 </head>
 
 <body>
-<div id="wrapper">
-    {% block sidebar %}
-        <div id="sidebar-wrapper">
-            <ul class="sidebar-nav">
-                <li class="sidebar-brand"><a href="{{ path('home') }}">Diktaplus Admin Interface</a></li>
+<nav class="navbar navbar-default">
+    <div class="container-fluid">
+        <div class="navbar-header">
+            <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
+                    data-target="#bs-example-navbar-collapse-1">
+                <span class="sr-only">Toggle navigation</span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+                <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="#">Diktaplus</a>
+        </div>
+        <div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+            <ul class="nav navbar-nav">
                 {% if app.user %}
-                    <li><a href="{{ path('texts') }}">Texts management</a></li>
-                    <li><a href="{{ path('users') }}">Users management</a></li>
-                    <li><a href="{{ path('logout') }}">Logout</a></li>
+                    <li><a href="{{ path('texts') }}">Texts</a></li>
+                    <li><a href="{{ path('users') }}">Users</a></li>
                 {% else %}
                     <li><a href="{{ path('login') }}">Login</a></li>
                 {% endif %}
             </ul>
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="">{{ app.user.email }}</a> </li>
+                <li><a href="{{ path('logout') }}">Logout</a></li>
+            </ul>
         </div>
-    {% endblock %}
+    </div>
+</nav>
 
-    <div id="page-content-wrapper">
-        <a type="button" class="btn btn-info" id="menu-toggle"">Show/hide sidebar</a>
-        {% for message in app.session.flashbag().get('info') %}{{ message }}{% endfor %}
-        <div style="margin-top:15px;background-color: white">
-            {% if app.user %}{% block content %}{% endblock %}{% endif %}
-        </div>
+<div class="container">
+    {% block toolbar %}{% endblock %}
+    {% for message in app.session.flashbag().get('info') %}
+        {{ message }}
+    {% endfor %}
+    <div style="margin-top:15px;">
+        {% if app.user %}{% block content %}{% endblock %}{% endif %}
     </div>
 </div>
 

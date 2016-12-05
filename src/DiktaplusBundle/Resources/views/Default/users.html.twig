@@ -1,4 +1,14 @@
 {% extends 'base.html.twig' %}
+
+{% block toolbar %}
+    <a type="button" href="{{ path('users_add') }}" class="btn btn-success">Add user</a>
+    <ul class="pagination pull-right">
+        {% for i in 1..pagesCount %}
+            <li {% if i == actualPage %} class="active" {% endif %} ><a href="{{ path('texts', {'page': i}) }}">{{ i }}</a></li>
+        {% endfor %}
+    </ul>
+{% endblock %}
+
 {% block content %}
     <div class="table-responsive">
         <table class="table table-bordered table-striped">
@@ -10,7 +20,7 @@
                 <th>Country</th>
                 <th>Total score</th>
                 <th>Level</th>
-                <th>Options</th>
+                <th width="15%">Options</th>
             </tr>
             </thead>
             <tbody>
@@ -29,5 +39,4 @@
             </tbody>
         </table>
     </div>
-    <a type="button" href="{{ path('users_add') }}" class="btn btn-success">Add user</a>
 {% endblock %}

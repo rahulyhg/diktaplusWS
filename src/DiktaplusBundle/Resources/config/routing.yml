@@ -6,11 +6,11 @@ home:
 #============================== TEXTS MANAGEMENT ============================
 
 texts:
-    path:     /texts
-    defaults: { _controller: DiktaplusBundle:Texts:texts }
+    path:     /texts/{page}
+    defaults: { _controller: DiktaplusBundle:Texts:texts, page: 1}
 
 texts_add:
-    path:     /texts/add
+    path:     /texts/add/new
     defaults: { _controller: DiktaplusBundle:Texts:addText }
 
 texts_edit:
@@ -25,11 +25,11 @@ texts_delete:
 #============================== USERS MANAGEMENT ============================
 
 users:
-    path:     /users
-    defaults: { _controller: DiktaplusBundle:Users:users }
+    path:     /users/{page}
+    defaults: { _controller: DiktaplusBundle:Users:users, page: 1 }
 
 users_add:
-    path:     /users/add
+    path:     /users/add/new
     defaults: { _controller: DiktaplusBundle:Users:addUser }
 
 users_edit:

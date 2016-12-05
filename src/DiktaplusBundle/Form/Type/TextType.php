@@ -30,7 +30,7 @@ class TextType extends AbstractType
             'choices_as_values' => true
         ));
 
-        $builder->add('title', TextareaType::class, array(
+        $builder->add('title', \Symfony\Component\Form\Extension\Core\Type\TextType::class, array(
             'required' => 'true',
             "attr" => array('class' => 'form-control')
         ));

@@ -4,6 +4,7 @@ namespace DiktaplusBundle\Controller;
 
 use DiktaplusBundle\Entity\Text;
 use DiktaplusBundle\Form\Type\TextType;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -18,12 +19,27 @@ class TextsController extends Controller
         $this->session = new Session();
     }
 
-    public function textsAction()
+    public function textsAction($page)
     {
-        $repository = $this->getDoctrine()
-            ->getRepository('DiktaplusBundle:Text');
-        $texts = $repository->findAll();
-        return $this->render('DiktaplusBundle:Default:texts.html.twig', array('texts' => $texts));
+        $paginator=$this->paginateTexts(3,$page);
+        $totalItems = count($paginator);
+        $pagesCount = ceil($totalItems / 3);
+
+        return $this->render('DiktaplusBundle:Default:texts.html.twig', array('texts' => $paginator,
+            "actualPage" => $page,
+            "pagesCount" => $pagesCount));
+
+    }
+
+    public function paginateTexts($pageSize,$currentPage){
+        $em=$this->getDoctrine()->getEntityManager();
+
+        $dql = "SELECT p FROM DiktaplusBundle\Entity\Text p ORDER BY p.id ASC";
+        $query = $em->createQuery($dql)->setFirstResult($pageSize * ($currentPage - 1))
+            ->setMaxResults($pageSize);
+
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
+        return $paginator;
     }
 
     public function addTextAction(Request $request)
@@ -64,7 +80,7 @@ class TextsController extends Controller
             return $this->redirect($this->generateURL('texts'));
         }
         return $this->render('DiktaplusBundle:Default:form.html.twig',
-            array('form' => $form->createView(), 'form_title' => "Edit text " . $id));
+            array('form' => $form->createView(), 'form_title' => 'Edit text "'.$text->getTitle().'"'));
     }
 
     public function deleteTextAction($id)
@@ -84,11 +100,7 @@ class TextsController extends Controller
         $em->remove($text);
         $em->flush();
         $this->session->getFlashBag()->add('info', 'Text successfully deleted');
-
-        $repository = $this->getDoctrine()
-            ->getRepository('DiktaplusBundle:Text');
-        $texts = $repository->findAll();
-        return $this->render('DiktaplusBundle:Default:texts.html.twig', array('texts' => $texts));
+        return $this->redirect($this->generateURL('texts'));
     }
 
 

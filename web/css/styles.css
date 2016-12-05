@@ -1,0 +1,16 @@
+#login-box {
+    background: cornflowerblue;
+    padding: 15px;
+    width: 500px;
+    margin: 30px auto 0;
+}
+
+@media screen and (max-width: 728px){
+    #login-box {
+        width: 80%;
+    }
+}
+
+.pagination {
+    margin: 0;
+}

@@ -4,6 +4,7 @@ namespace DiktaplusBundle\Controller;
 
 use DiktaplusBundle\Entity\User;
 use DiktaplusBundle\Form\Type\UserType;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Symfony\Bundle\FrameworkBundle\Controller\Controller;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Session\Session;
@@ -18,12 +19,27 @@ class UsersController extends Controller
         $this->session = new Session();
     }
 
-    public function usersAction()
+    public function usersAction($page)
     {
-        $repository = $this->getDoctrine()
-            ->getRepository('DiktaplusBundle:User');
-        $users = $repository->findAll();
-        return $this->render('DiktaplusBundle:Default:users.html.twig', array('users' => $users));
+        $paginator=$this->paginateTexts(7,$page);
+        $totalItems = count($paginator);
+        $pagesCount = ceil($totalItems / 7);
+
+        return $this->render('DiktaplusBundle:Default:users.html.twig', array('users' => $paginator,
+            "actualPage" => $page,
+            "pagesCount" => $pagesCount));
+
+    }
+
+    public function paginateTexts($pageSize,$currentPage){
+        $em=$this->getDoctrine()->getEntityManager();
+
+        $dql = "SELECT p FROM DiktaplusBundle\Entity\User p ORDER BY p.id ASC";
+        $query = $em->createQuery($dql)->setFirstResult($pageSize * ($currentPage - 1))
+            ->setMaxResults($pageSize);
+
+        $paginator = new Paginator($query, $fetchJoinCollection = true);
+        return $paginator;
     }
 
     public function addUserAction(Request $request)
@@ -72,7 +88,7 @@ class UsersController extends Controller
             return $this->redirect($this->generateURL('users'));
         }
         return $this->render('DiktaplusBundle:Default:form.html.twig',
-            array('form' => $form->createView(), 'form_title' => "Edit user " . $id));
+            array('form' => $form->createView(), 'form_title' => 'Edit user "'.$user->getUsername().'"'));
     }
 
     public function deleteUserAction($id)
@@ -93,10 +109,8 @@ class UsersController extends Controller
         $em->flush();
         $this->session->getFlashBag()->add('info', 'User successfully deleted');
 
-        $repository = $this->getDoctrine()
-            ->getRepository('DiktaplusBundle:User');
-        $users = $repository->findAll();
-        return $this->render('DiktaplusBundle:Default:users.html.twig', array('users' => $users));
+        return $this->redirect($this->generateURL('users'));
+
     }
 
 
