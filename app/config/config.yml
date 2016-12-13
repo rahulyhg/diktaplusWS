@@ -76,4 +76,4 @@ fos_oauth_server:
     service:
         user_provider:   diktaplus.user_provider
         options:
-            access_token_lifetime: 3600
+            access_token_lifetime: 1209600
