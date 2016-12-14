@@ -32,7 +32,7 @@ class TextsController extends Controller
     }
 
     public function paginateTexts($pageSize,$currentPage){
-        $em=$this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
 
         $dql = "SELECT p FROM DiktaplusBundle\Entity\Text p ORDER BY p.id ASC";
         $query = $em->createQuery($dql)->setFirstResult($pageSize * ($currentPage - 1))
@@ -53,7 +53,7 @@ class TextsController extends Controller
             $em->persist($text);
             $em->flush();
             $this->session->getFlashBag()->add('info', 'Text successfully added');
-            return $this->redirect($this->generateURL('texts'));
+            return $this->redirect($this->generateUrl('texts'));
         }
 
         return $this->render('DiktaplusBundle:Default:form.html.twig',
@@ -77,7 +77,7 @@ class TextsController extends Controller
         if ($form->isValid()) {
             $em->flush();
             $this->session->getFlashBag()->add('info', 'Text successfully modified');
-            return $this->redirect($this->generateURL('texts'));
+            return $this->redirect($this->generateUrl('texts'));
         }
         return $this->render('DiktaplusBundle:Default:form.html.twig',
             array('form' => $form->createView(), 'form_title' => 'Edit text "'.$text->getTitle().'"'));
@@ -100,7 +100,7 @@ class TextsController extends Controller
         $em->remove($text);
         $em->flush();
         $this->session->getFlashBag()->add('info', 'Text successfully deleted');
-        return $this->redirect($this->generateURL('texts'));
+        return $this->redirect($this->generateUrl('texts'));
     }
 
 

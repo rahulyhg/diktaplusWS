@@ -32,7 +32,7 @@ class UsersController extends Controller
     }
 
     public function paginateTexts($pageSize,$currentPage){
-        $em=$this->getDoctrine()->getEntityManager();
+        $em=$this->getDoctrine()->getManager();
 
         $dql = "SELECT p FROM DiktaplusBundle\Entity\User p ORDER BY p.id ASC";
         $query = $em->createQuery($dql)->setFirstResult($pageSize * ($currentPage - 1))
@@ -61,7 +61,7 @@ class UsersController extends Controller
             $em->persist($user);
             $em->flush();
             $this->session->getFlashBag()->add('info', 'User successfully added');
-            return $this->redirect($this->generateURL('users'));
+            return $this->redirect($this->generateUrl('users'));
         }
 
         return $this->render('DiktaplusBundle:Default:form.html.twig',
@@ -85,7 +85,7 @@ class UsersController extends Controller
         if ($form->isValid()) {
             $em->flush();
             $this->session->getFlashBag()->add('info', 'User successfully modified');
-            return $this->redirect($this->generateURL('users'));
+            return $this->redirect($this->generateUrl('users'));
         }
         return $this->render('DiktaplusBundle:Default:form.html.twig',
             array('form' => $form->createView(), 'form_title' => 'Edit user "'.$user->getUsername().'"'));
@@ -109,7 +109,7 @@ class UsersController extends Controller
         $em->flush();
         $this->session->getFlashBag()->add('info', 'User successfully deleted');
 
-        return $this->redirect($this->generateURL('users'));
+        return $this->redirect($this->generateUrl('users'));
 
     }
 

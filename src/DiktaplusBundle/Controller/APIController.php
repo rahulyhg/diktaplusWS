@@ -139,7 +139,7 @@ class APIController extends FOSRestController
     // Gets a list of cnt users filtered by country
     public function getRankingAction($country, $cnt)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         if ($country != 'world') $dql = 'select a from DiktaplusBundle:User a where a.country=:country order by a.totalScore desc';
         else $dql = 'select a from DiktaplusBundle:User a order by a.totalScore desc';
         $query = $em->createQuery($dql);
@@ -156,7 +156,7 @@ class APIController extends FOSRestController
     // Gets a list of users with a similar username
     public function getUsersByUsernameAction($username)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $dql = 'select a from DiktaplusBundle:User a where a.username like :username order by a.totalScore desc';
         $query = $em->createQuery($dql);
         $query->setParameter('username', '%' . $username . '%');
@@ -217,7 +217,7 @@ class APIController extends FOSRestController
     // Gets a list of texts filtered by language and difficulty
     public function getTextsAction($language, $difficulty)
     {
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $dql = 'select a.id, a.title from DiktaplusBundle:Text a where a.language=:language and a.difficulty=:difficulty';
         $query = $em->createQuery($dql);
         $query->setParameter('language', $language);
@@ -276,7 +276,7 @@ class APIController extends FOSRestController
     public function getBestScoreAction($user, $text)
     {
 
-        $em = $this->getDoctrine()->getEntityManager();
+        $em = $this->getDoctrine()->getManager();
         $dql = 'select a.id,a.score from DiktaplusBundle:Game a where a.text=:text and a.user=:user order by a.score desc';
         $query = $em->createQuery($dql);
 
